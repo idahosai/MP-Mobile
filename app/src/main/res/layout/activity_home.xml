@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="Home"></item>
+
+        <item
+            android:id="@+id/email"
+            android:icon="@drawable/ic_baseline_email_24"
+            android:title="Broadcast"></item>
+
+        <item
+            android:id="@+id/importcontacts"
+            android:icon="@drawable/ic_baseline_import_contacts_24"
+            android:title="Import Subscribers"></item>
+
+        <item
+            android:id="@+id/face"
+            android:icon="@drawable/ic_baseline_face_24"
+            android:title="Subscribers"></item>
+
+        <item
+            android:id="@+id/forwardtoinbox"
+            android:icon="@drawable/ic_baseline_forward_to_inbox_24"
+            android:title="Workflow Automations"></item>
+
+        <item
+            android:id="@+id/playlistaddcheck"
+            android:icon="@drawable/ic_baseline_playlist_add_check_24"
+            android:title="Lists"></item>
+
+        <item
+            android:id="@+id/editattributes"
+            android:icon="@drawable/ic_baseline_edit_attributes_24"
+            android:title="Tag"></item>
+
+        <item
+            android:id="@+id/libraryaddcheck"
+            android:icon="@drawable/ic_baseline_library_add_check_24"
+            android:title="Custom Feilds"></item>
+
+        <item
+            android:id="@+id/filterlist"
+            android:icon="@drawable/ic_baseline_filter_list_24"
+            android:title="Segments"></item>
+
+        <item
+            android:id="@+id/dynamicform"
+            android:icon="@drawable/ic_baseline_dynamic_form_24"
+            android:title="Forms"></item>
+
+        <item
+            android:id="@+id/accountbox"
+            android:icon="@drawable/ic_baseline_account_box_24"
+            android:title="Account Information"></item>
+
+        <item
+            android:id="@+id/exittoapp"
+            android:icon="@drawable/ic_baseline_exit_to_app_24"
+            android:title="Log Out"></item>
+
+    </group>
+
+    <!--<item android:title="Communicate">
+
+        <home>
+
+            <item
+                android:id="@+id/share"
+                android:icon="@drawable/ic_baseline_home_24"
+                android:title="share"></item>
+
+            <item
+                android:id="@+id/send"
+                android:icon="@drawable/ic_baseline_email_24"
+                android:title="send"></item>
+        </home>
+
+    </item> -->
+
+
+</menu>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="341dp"
+        android:layout_height="107dp"
+        android:layout_margin="1dp"
+        android:stretchColumns="1,2,3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.305"
+        tools:context=".MainActivity"
+        tools:ignore="MissingConstraints">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/id_txt"
+                android:layout_width="26dp"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/name_txt"
+                android:layout_width="20dp"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/status_txt"
+                android:layout_width="13dp"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/type_txt"
+                android:layout_width="46dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/senttonumber_txt"
+                android:layout_width="42dp"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/stats_txt"
+                android:layout_width="56dp"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/datetime_txt"
+                android:layout_width="46dp"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp" />
+
+        </TableRow>
+        <!--
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        -->
+    </TableLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "748835430619",
+    "firebase_url": "https://mailpinyata-default-rtdb.firebaseio.com",
+    "project_id": "mailpinyata",
+    "storage_bucket": "mailpinyata.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748835430619:android:bebda8449e5a0534e8ecfe",
+        "android_client_info": {
+          "package_name": "com.example.mp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748835430619-839vg91jgh4qk1h2d6p4idgp0ufof0an.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuqlnuE1hbtlJawZyybeQe4R55-FNXLQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748835430619-839vg91jgh4qk1h2d6p4idgp0ufof0an.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
