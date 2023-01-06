@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new ImportmanuallyFragment()).commit();
                 break;
             case R.id.face:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new SubscribersFragment()).commit();
                 Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.forwardtoinbox:

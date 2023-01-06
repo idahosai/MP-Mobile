@@ -1,6 +1,5 @@
 package com.example.mp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +9,10 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.mp.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,20 +42,67 @@ public class WorkflowFragment extends Fragment {
         rssautomation_btn = view.findViewById(R.id.rssautomation_btn);
         broadcast_btn = view.findViewById(R.id.broadcast_btn);
 
+
+
+
         rssautomation_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*
+                getParentFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new HomeFragment()).commit();
+
+
+                // Create new fragment and transaction
+                Fragment newFragment = new HomeFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                // Replace whatever is in the fragment_container view with this fragment,
+                // and add the transaction to the back stack if needed
+                transaction.replace(R.id.fragment_container, newFragment);
+                //transaction.addToBackStack(null);
+                // Commit the transaction
+                transaction.commit();
+                */
+
                 //Intent myIntent = new Intent(MainActivity.this, RegisterActivity.class);
                 //myIntent.putExtra("key", 5); //Optional parameters
                 //MainActivity.this.startActivity(myIntent);
 
-                Intent intentMain = new Intent(LoginActivity.this , RegisterActivity.class);
-                startActivity(intentMain);
+                    //Intent intentMain = new Intent(view.getContext() , CreateworkflowActivity.class);
+                    //view.getContext().startActivity(intentMain);
+
                 //createNewStudentAuth();
                 //createNewStudentAccount(44);
 
+
+                /*
+                Fragment fragment = new CreateworkflowFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                */
+
+
+                Fragment fragment = new TriggerFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
             }
         });
+
+
+
+
+
+
+
         return view;
     }
 
@@ -84,6 +130,7 @@ public class WorkflowFragment extends Fragment {
                 2, 1, 2));
         return email_list;
     }
+
 
 
 }
