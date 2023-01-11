@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="362dp"
+        android:layout_height="166dp"
+        android:layout_margin="1dp"
+        android:stretchColumns="1,2,3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".MainActivity"
+        tools:ignore="MissingConstraints">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/contactemail_txt"
+                android:layout_width="61dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/contactname_txt"
+                android:layout_width="51dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/contactlifetimevalue_txt"
+                android:layout_width="53dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/contactdatetime_txt"
+                android:layout_width="85dp"
+                android:layout_height="47dp"
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+
+    </TableLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
