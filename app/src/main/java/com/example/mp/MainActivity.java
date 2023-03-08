@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +39,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        //receive
+        CheckSigninApi checkSigninApi = (CheckSigninApi) getIntent().getParcelableExtra("staff");
+        String content = "";
+        content += "model: " + checkSigninApi.getModel() + "\n";
+        content += "pk: " + checkSigninApi.getPk() + "\n";
+        content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+        System.out.println("*****A******" + content);
+
 
         /*
         recycler_view = findViewById(R.id.recycler_view);
@@ -114,8 +128,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new WorkflowFragment()).commit();
                 break;
             case R.id.importcontacts:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ImportmanuallyFragment()).commit();
+
+                CheckSigninApi checkSigninApi = (CheckSigninApi) getIntent().getParcelableExtra("staff");
+                String content = "";
+                content += "model: " + checkSigninApi.getModel() + "\n";
+                content += "pk: " + checkSigninApi.getPk() + "\n";
+                content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+                System.out.println("*****A******" + content);
+
+
+                Fragment ldf = new ImportmanuallyFragment();
+                Bundle args = new Bundle();
+                args.putParcelable("thestaff",checkSigninApi);
+                ldf.setArguments(args);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, ldf);
+                //fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                //        new ImportmanuallyFragment()).commit();
                 break;
             case R.id.face:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

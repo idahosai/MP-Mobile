@@ -2,7 +2,10 @@ package com.example.mp;
 
 public class Contact {
 
-    String id;
+    String status;
+    //json will set this to null when sending to api
+    Integer id;
+
     Double lifetimevalue;
     //i need to check the data type of this latter
     //is it Date or String
@@ -28,7 +31,8 @@ public class Contact {
     String totalreviewsleft;
     String lastemailratingdone;
 
-    public Contact(String id, Double lifetimevalue, String datejoined, String notes, String emailaddress, String firstname, String lastname, String jobtitle, String company, String mobilephone, String workphone, String country, String stateprovince, String city, String address, String zip, String website, String stopmethod, String confirmquestionmark, String addmethod, String signupsource, String totalreviewsleft, String lastemailratingdone) {
+    public Contact(String status, Integer id, Double lifetimevalue, String datejoined, String notes, String emailaddress, String firstname, String lastname, String jobtitle, String company, String mobilephone, String workphone, String country, String stateprovince, String city, String address, String zip, String website, String stopmethod, String confirmquestionmark, String addmethod, String signupsource, String totalreviewsleft, String lastemailratingdone) {
+        this.status = status;
         this.id = id;
         this.lifetimevalue = lifetimevalue;
         this.datejoined = datejoined;
@@ -62,8 +66,34 @@ public class Contact {
         this.lastname = lastname;
     }
 
-    public String getId() {
+    //for not sending id to post api
+    public Contact(String datejoined, String notes, String emailaddress, String firstname, String lastname, String jobtitle, String company, String mobilephone, String workphone, String country, String stateprovince, String city, String address, String zip, String website, String addmethod, String signupsource) {
+        this.datejoined = datejoined;
+        this.notes = notes;
+        this.emailaddress = emailaddress;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.jobtitle = jobtitle;
+        this.company = company;
+        this.mobilephone = mobilephone;
+        this.workphone = workphone;
+        this.country = country;
+        this.stateprovince = stateprovince;
+        this.city = city;
+        this.address = address;
+        this.zip = zip;
+        this.website = website;
+        this.addmethod = addmethod;
+        this.signupsource = signupsource;
+
+    }
+
+    public Integer getId() {
         return id;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public Double getLifetimevalue() {

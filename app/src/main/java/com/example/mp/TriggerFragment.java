@@ -21,6 +21,19 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class TriggerFragment extends Fragment {
 
 
@@ -43,7 +56,8 @@ public class TriggerFragment extends Fragment {
 
     private final String dayorweek[] = {"Everyday", "Week"};
     private final String day[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-    private final String segments[] = {"New user", "Man", "Woman"};
+    private String[] segments = {};
+    //private String[] segments = {"New user", "Man", "Woman"};
 
     String dayorweekselected;
     String dayselected;
@@ -75,10 +89,78 @@ public class TriggerFragment extends Fragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, dayorweek);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, day);
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, segments);
+
         everydayorweek_spn.setAdapter(adapter);
         daysofweek_spn.setAdapter(adapter2);
-        segmentsdropdown_spn.setAdapter(adapter3);
+
+
+        //begin
+        ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(segments));
+        Retrofit retrofit = new Retrofit.Builder()
+                //has to have "http://" or it wont work
+                .baseUrl("http://mpmp-env25.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+        System.out.println("hereeeeeeeeeeee5");
+
+        Date datecalender = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(formatter.format(datecalender));
+
+        Call<List<Segment>> call6 = jsonPlaceHolderApi.getSegmentApis();
+        call6.enqueue(new Callback<List<Segment>>() {
+            @Override
+            public void onResponse(Call<List<Segment>> call6, Response<List<Segment>> response) {
+                if(!response.isSuccessful()){
+                    try {
+                        System.out.println("Code: " + response.code() +""+ response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+                System.out.println("*");
+                //its a list of whatever is inside
+                List<Segment> segmentApis = response.body();
+                System.out.println("************"+response.body().toString());
+                System.out.println("***********"+segmentApis);
+                System.out.println("***********"+segmentApis.size());
+                //this should only have 1 lenth
+                //if(customfeildApis.size() == 1) {
+                //    for (Customfeild customfeildApi : customfeildApis) {
+                //        String content = "";
+                //        content += "A name: " + customfeildApi.getName() + "\n";
+                //        content += "A dateofcreation: " + customfeildApi.getDateofcreation() + "\n";
+                //        content += "A lastcustomfeildupdate: " + customfeildApi.getLastcustomfeildupdate() + "\n\n";
+                //        arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                //        System.out.println("***********" + content);
+                //    }
+                //}
+                for (Segment segmentApi : segmentApis) {
+                    String content = "";
+                    content += "A5 name: " + segmentApi.getName() + "\n";
+                    content += "A5 dateofcreation: " + segmentApi.getDateofcreation() + "\n";
+                    content += "A5 dateone: " + segmentApi.getDateone() + "\n\n";
+                    //arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                    System.out.println("***********" + content);
+
+
+                    arrayList.add(segmentApi.getId().toString() +"."+segmentApi.getName());
+                    segments = arrayList.toArray(segments);
+                }
+                ArrayAdapter<String> adapter3 = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, segments);
+                segmentsdropdown_spn.setAdapter(adapter3);
+            }
+            @Override
+            public void onFailure(Call<List<Segment>> call6, Throwable t) {
+
+                System.out.println("********"+t.getMessage());
+            }
+        });
+        //above
+
 
 
         everydayorweek_spn.setOnItemSelectedListener(

@@ -15,21 +15,30 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecyclerCustomfeildAdapter extends RecyclerView.Adapter<RecyclerCustomfeildAdapter.ViewHolder>{
 
     Context context;
-    ArrayList<Object> arrCustomfeilds;
+    ArrayList<Customfeild> arrCustomfeilds;
 
-    public RecyclerCustomfeildAdapter(Context context, ArrayList<Object> arrCustomfeilds) {
+    public RecyclerCustomfeildAdapter(Context context, ArrayList<Customfeild> arrCustomfeilds) {
         this.context = context;
         this.arrCustomfeilds = arrCustomfeilds;
     }
@@ -94,8 +103,79 @@ public class RecyclerCustomfeildAdapter extends RecyclerView.Adapter<RecyclerCus
                         Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         String newestdate = formatter.format(datecalender.getDate());
 
+
+                        //part to delete is below
+                        //arrCustomfeilds.get(position).getId()
+                        System.out.println("id of customfeild:" + model.id);
+                        Retrofit retrofit = new Retrofit.Builder()
+                                //has to have "http://" or it wont work
+                                .baseUrl("http://mpmp-env25.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+                        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+                        //Double h = 9.60;
+                        //pass the query
+                        //Date datefromdatabase2 = new Date();
+                        //Date datecalender2 = new Date();
+                        //SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        //System.out.println(formatter2.format(datecalender2));
+                        System.out.println("hereeeeeeeeeeee4");
+
+
+                        Call<List<Customfeild>> call4 = jsonPlaceHolderApi.getCustomfeildApis(
+                                model.id.toString(),name,value, newestdate, newestdate
+
+                        );
+                        call4.enqueue(new Callback<List<Customfeild>>() {
+                            @Override
+                            public void onResponse(Call<List<Customfeild>> call4, Response<List<Customfeild>> response) {
+                                if(!response.isSuccessful()){
+                                    try {
+                                        System.out.println("Code: " + response.code() +""+ response.errorBody().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return;
+                                }
+                                System.out.println("*");
+                                //its a list of whatever is inside
+                                List<Customfeild> customfeildApis = response.body();
+                                System.out.println("************"+response.body().toString());
+                                System.out.println("***********"+customfeildApis);
+                                System.out.println("***********"+customfeildApis.size());
+                                //if(customfeildApis.size() == 1) {
+                                //    for (Customfeild customfeildApi : customfeildApis) {
+                                //        String content = "";
+                                //        content += "A name: " + customfeildApi.getName() + "\n";
+                                //        content += "A dateofcreation: " + customfeildApi.getDateofcreation() + "\n";
+                                //        content += "A lastcustomfeildupdate: " + customfeildApi.getLastcustomfeildupdate() + "\n\n";
+                                //        arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                                //        System.out.println("***********" + content);
+                                //    }
+                                //}
+                                for (Customfeild customfeildApi : customfeildApis) {
+                                    String content = "";
+                                    content += "A4 name: " + customfeildApi.getName() + "\n";
+                                    content += "A4 dateofcreation: " + customfeildApi.getDateofcreation() + "\n";
+                                    content += "A4 lastcustomfeildupdate: " + customfeildApi.getLastcustomfeildupdate() + "\n\n";
+                                    //arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                                    System.out.println("***********" + content);
+                                }
+
+                            }
+                            @Override
+                            public void onFailure(Call<List<Customfeild>> call4, Throwable t) {
+
+                                System.out.println("********"+t.getMessage());
+                            }
+                        });
+
+
                         //add as customfeild
-                        arrCustomfeilds.set(position,new Customfeild(name,value, newestdate, newestdate));
+                        arrCustomfeilds.set(position,new Customfeild(model.id,name,value, newestdate, newestdate));
+
+
+                        //part to delete is above
                         notifyItemChanged(position);
                         dialog.dismiss();
 

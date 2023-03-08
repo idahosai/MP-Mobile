@@ -26,6 +26,17 @@ public class ImportmanuallyFragment extends Fragment {
         //return super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_importmanually, container,false);
 
+
+        /*
+        CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+        String content = "";
+        content += "model: " + checkSigninApi.getModel() + "\n";
+        content += "pk: " + checkSigninApi.getPk() + "\n";
+        content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+        System.out.println("*****B******" + content);
+        */
+
+
         importmanually_btn = view.findViewById(R.id.importmanually_btn);
 
         predictions_btn = view.findViewById(R.id.predictions_btn);
@@ -34,12 +45,33 @@ public class ImportmanuallyFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+                String content = "";
+                content += "model: " + checkSigninApi.getModel() + "\n";
+                content += "pk: " + checkSigninApi.getPk() + "\n";
+                content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+                System.out.println("*****B******" + content);
+
+                Fragment ldf = new ListcustomfeilditemFragment();
+                Bundle args = new Bundle();
+                args.putParcelable("thestaff",checkSigninApi);
+                ldf.setArguments(args);
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, ldf);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                /*
                 Fragment fragment = new ListcustomfeilditemFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+                */
+
 
             }});
 
