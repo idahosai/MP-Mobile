@@ -1,3 +1,4 @@
+
 package com.example.mp;
 
 import android.content.Intent;
@@ -20,10 +21,13 @@ import org.jetbrains.annotations.NotNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -45,6 +49,12 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 //import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateworkflowFragment extends Fragment {
@@ -75,6 +85,7 @@ public class CreateworkflowFragment extends Fragment {
     List<List<String>> newestgrouplenover1 = new ArrayList<List<String>>();
     List<Integer> storedfordelete = new ArrayList<>();
 
+    List<String> emaillist;
 
 
 
@@ -103,10 +114,10 @@ public class CreateworkflowFragment extends Fragment {
     //timer.scheduleAtFixedRate(task, calendar2.getTime(),8640000);//=7 days
     Date datecalender = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                //System.out.println(formatter.format(datecalender));
-                //System.out.println(datecalender.getMonth());
-                //System.out.println(datecalender.getDate());
-                //System.out.println("*********************************************");
+    //System.out.println(formatter.format(datecalender));
+    //System.out.println(datecalender.getMonth());
+    //System.out.println(datecalender.getDate());
+    //System.out.println("*********************************************");
 
 
     @Nullable
@@ -158,6 +169,116 @@ public class CreateworkflowFragment extends Fragment {
             public void onClick(View v) {
 
 
+
+
+                //below
+                //below
+                String getValue3 = getArguments().getString("subscriber segment");
+                System.out.println(getValue3);
+
+                String[] arrOfStr = getValue3.split("\\.");
+                //Escaping a regex is done by \, but in Java, \ is written as \\).
+                System.out.println(Arrays.toString(arrOfStr));
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        //has to have "http://" or it wont work
+                        .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+                System.out.println("hereeeeeeeeeeee5");
+
+                Date datecalender = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                System.out.println(formatter.format(datecalender));
+
+                //System.out.println(Arrays.toString(new String[]{arrOfStr[0]}));
+                System.out.println("--------------------------------------------------");
+                //System.out.println(arrOfStr[0].toString());
+                int countings = 0;
+                String idsegmentholder = "0";
+
+                //List<String> al = Arrays.asList(arrOfStr);
+
+                //List<String> arrayList = new ArrayList<>();
+                //Collections.addAll(arrayList, arrOfStr);
+
+                //System.out.println(arrayList);
+
+                for (String s : arrOfStr) {
+                    System.out.println(s);
+                    if (countings == 0){
+                        idsegmentholder = s;
+                    }
+                    countings = countings + 1;
+                }
+                //this code below is the problem as it doesn't show what it is
+                System.out.println("idsegmentholder value is " + idsegmentholder);
+                //Call<List<Contact>> call8 = jsonPlaceHolderApi.getSegmentIdToContactApis(arrOfStr[0].toString());
+                Call<List<Contact>> call8 = jsonPlaceHolderApi.getSegmentIdToContactApis(idsegmentholder);
+                //Call<List<Contact>> call8 = jsonPlaceHolderApi.getSegmentIdToContactApis("9");
+                emaillist = new ArrayList<>();
+
+                call8.enqueue(new Callback<List<Contact>>() {
+                    @Override
+                    public void onResponse(Call<List<Contact>> call8, Response<List<Contact>> response) {
+                        if(!response.isSuccessful()){
+                            try {
+                                System.out.println("Code: " + response.code() +""+ response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return;
+                        }
+                        System.out.println("*");
+                        //its a list of whatever is inside
+                        List<Contact> contactApis = response.body();
+                        System.out.println("************"+response.body().toString());
+                        System.out.println("***********"+contactApis);
+                        System.out.println("***********"+contactApis.size());
+                        //this should only have 1 lenth
+                        //if(customfeildApis.size() == 1) {
+                        //    for (Customfeild customfeildApi : customfeildApis) {
+                        //        String content = "";
+                        //        content += "A name: " + customfeildApi.getName() + "\n";
+                        //        content += "A dateofcreation: " + customfeildApi.getDateofcreation() + "\n";
+                        //        content += "A lastcustomfeildupdate: " + customfeildApi.getLastcustomfeildupdate() + "\n\n";
+                        //        arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                        //        System.out.println("***********" + content);
+                        //    }
+                        //}
+
+                        //adapter.contact_list.clear();
+                        for (Contact contactApi : contactApis) {
+                            String content = "";
+                            //content += "A8 first name: " + contactApi.getFirstname() + "\n";
+                            //content += "A8 date joined: " + contactApi.getDatejoined() + "\n";
+                            content += "A8 email: " + contactApi.getEmailaddress() + "\n\n";
+                            //arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                            System.out.println("***********" + content);
+                            emaillist.add(contactApi.getEmailaddress());
+                            System.out.println("********email list = "+emaillist.toString());
+                        }
+
+                        //adapter.contact_list.add(new Contact(h,"Jan 06,2022 6:01PM","update1@bell.net","update1","here"));
+                        //adapter.contact_list.add(new Contact(t,"Jan 06, 2022 6:09PM","update2@bell.net","update2","here"));
+                        //adapter.notifyDataSetChanged();
+
+                    }
+                    @Override
+                    public void onFailure(Call<List<Contact>> call8, Throwable t) {
+
+                        System.out.println("********"+t.getMessage());
+                    }
+                });
+
+
+                //above
+
+
+
+
                 String getValue = getArguments().getString("send frequency");
                 setupforsend();
 
@@ -201,27 +322,21 @@ public class CreateworkflowFragment extends Fragment {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createworkflow);
-
-
         trigger_imgbtn = (ImageButton) findViewById(R.id.trigger_imgbtn);
         delay_imgbtn = (ImageButton) findViewById(R.id.delay_imgbtn);
         condition_imgbtn = (ImageButton) findViewById(R.id.condition_imgbtn);
         action_imgbtn = (ImageButton) findViewById(R.id.action_imgbtn);
         email_imgbtn = (ImageButton) findViewById(R.id.email_imgbtn);
-
-
         email_imgbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Intent myIntent = new Intent(MainActivity.this, RegisterActivity.class);
                 //myIntent.putExtra("key", 5); //Optional parameters
                 //MainActivity.this.startActivity(myIntent);
-
                 Intent intentMain = new Intent(CreateworkflowActivity.this , RegisterActivity.class);
                 startActivity(intentMain);
                 //createNewStudentAuth();
                 //createNewStudentAccount(44);
-
             }
         });
     }
@@ -414,14 +529,29 @@ public class CreateworkflowFragment extends Fragment {
 
 
             //
+            /*
             String mailFrom = "ae30c81fcfa156";
             String password = "db1462228c8403";
             String host = "smtp.mailtrap.io";
             String port = "2525";
+            */
+            //String port = "2525";
 
+            //this is a trail to see what works
+            String mailFrom = "igbinosaidahosai@gmail.com";
+            //String password = "Iggyboy4$";
+            String password = "nsvafjkawqiwzbqe";
+            String host = "smtp.gmail.com";
+            //String port = "465";
+            String port = "587";
+            //192.168.2.220
+            //192.168.2.1
+            //String mailTo = "idahosai@sheridancollege.ca";
 
             // message info
             //String mailTo = "YOUR_RECIPIENT";
+
+
             String mailTo = "idahosai@sheridancollege.ca";
             String getValue7 = getArguments().getString("subjectline");
             String subject = getValue7.toString();
@@ -448,8 +578,15 @@ public class CreateworkflowFragment extends Fragment {
             //inlineImages.put("image2", "C:/Users/nidah/AndroidStudioProjects/MP/app/src/main/res/drawable/email.png");
 
             try {
-                send(host, port, mailFrom, password, mailTo,
-                        subject, body.toString(), inlineImages);
+
+
+                for(String email : emaillist) {
+                    send2(host, port, mailFrom, password, email,
+                            subject, body.toString(), inlineImages, emaillist);
+                }
+                //send2(host, port, mailFrom, password, mailTo,
+                //                        subject, body.toString(), inlineImages, emaillist);
+
                 System.out.println("Email sent.***********************************************************************");
             } catch (Exception ex) {
                 //Toast.makeText(vie.getContext(), "here"+ex, Toast.LENGTH_SHORT).show();
@@ -464,10 +601,10 @@ public class CreateworkflowFragment extends Fragment {
 
 
 
-    public static void send(String host, String port,
+    public void send2(String host, String port,
                             final String userName, final String password, String toAddress,
                             String subject, String htmlBody,
-                            Map<String, String> mapInlineImages)
+                            Map<String, String> mapInlineImages, List<String> emaillist)
             throws AddressException, MessagingException {
         // sets SMTP server properties
         Properties properties = new Properties();
@@ -475,8 +612,18 @@ public class CreateworkflowFragment extends Fragment {
         //properties.put("mail.smtp.user", userName);
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", port);
+        //this one works
         properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.ssl.trust", host);
+
+        //properties.put("mail.smtp.auth", "true");
+        //properties.put("mail.smtp.host","smtp.gmail.com");
+        //properties.put("mail.smtp.port","587");
+
+        //properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        //properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
         // from https://stackoverflow.com/questions/1990454/using-javamail-to-connect-to-gmail-smtp-server-ignores-specified-port-and-tries-t
         //properties.put("mail.smtp.debug", "true");
@@ -484,11 +631,24 @@ public class CreateworkflowFragment extends Fragment {
         //properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         //properties.put("mail.smtp.socketFactory.fallback", "false");
         //below will re move the following error javax.mail.MessagingException Could not convert socket to TLS
-        properties.put("mail.smtp.starttls.enable", "false");
-        //
+
+        //i will temprarily remove this to see if it works
+        //this one works
+        //properties.put("mail.smtp.starttls.enable", "false");
+
         //properties.put("mail.password", password);
+        /*
+        Session session = Session.getInstance(properties,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(userName, password);
+                    }
+                });
+        */
+
 
         // creates a new session with an authenticator
+        /*
         Authenticator auth = new Authenticator() {
             public PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(userName, password);
@@ -496,7 +656,18 @@ public class CreateworkflowFragment extends Fragment {
         };
 
         Session session = Session.getInstance(properties, auth);
+        */
 
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(userName, password);
+            }
+        });
+        //Session session = Session.getDefaultInstance(properties, auth);
+
+
+        //Session session = Session.getDefaultInstance(properties, new GMailAuthenticator("xxxxx@gmail.com", "xxxxx"));
+        //session.setDebug(true);
 
 
 
@@ -505,6 +676,15 @@ public class CreateworkflowFragment extends Fragment {
 
         msg.setFrom(new InternetAddress(userName));
         InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
+        /*
+        InternetAddress [] toAddresses = new InternetAddress[emaillist.size()];
+        int counter = 0;
+        for(String email : emaillist) {
+            toAddresses[counter] = new InternetAddress(email.trim());
+            counter++;
+        }
+        */
+
         //msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toAddress));
         msg.setRecipients(Message.RecipientType.TO, toAddresses);
         msg.setSubject(subject);
@@ -513,6 +693,8 @@ public class CreateworkflowFragment extends Fragment {
         //msg.setText("Hey there, \n look my email!");
 
         // creates message part
+        //add header
+
 
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(htmlBody, "text/html");
@@ -526,12 +708,10 @@ public class CreateworkflowFragment extends Fragment {
         /*
         if (mapInlineImages != null && mapInlineImages.size() > 0) {
             Set<String> setImageID = mapInlineImages.keySet();
-
             for (String contentId : setImageID) {
                 MimeBodyPart imagePart = new MimeBodyPart();
                 imagePart.setHeader("Content-ID", "<" + contentId + ">");
                 imagePart.setDisposition(MimeBodyPart.INLINE);
-
                 String imageFilePath = mapInlineImages.get(contentId);
                 try {
                     File imageFile = new File(imageFilePath);
@@ -542,12 +722,10 @@ public class CreateworkflowFragment extends Fragment {
                         System.out.println(imageFilePath + " ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
                         System.out.println(new File(imageFilePath).getAbsoluteFile());
                     }
-
                     imagePart.attachFile(imageFilePath);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-
                 multipart.addBodyPart(imagePart);
             }
         }
@@ -557,13 +735,10 @@ public class CreateworkflowFragment extends Fragment {
         /*
         String htmlText = "<H1>Hello</H1><img src=\"cid:image\">";
         messageBodyPart.setContent(htmlText, "text/html");
-
         multipart.addBodyPart(messageBodyPart);
-
         messageBodyPart = new MimeBodyPart();
         DataSource fds = new FileDataSource(
                 "C:/Users/nidah/Downloads/forsend.png");
-
         messageBodyPart.setDataHandler(new DataHandler(fds));
         messageBodyPart.setHeader("Content-ID", "<image>");
         messageBodyPart.setDisposition(MimeBodyPart.INLINE);

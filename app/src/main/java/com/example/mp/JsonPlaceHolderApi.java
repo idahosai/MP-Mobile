@@ -91,4 +91,18 @@ public interface JsonPlaceHolderApi {
 
     );
 
+    @POST("CreateContact3View/")
+    @FormUrlEncoded
+    Call<List<Contact>> getDateContactApis(
+            @Field("date1") String date1,
+            @Field("date2") String date2
+
+    );
+
+    @POST("CreateSegmentIdToContactView/")
+    @FormUrlEncoded
+    Call<List<Contact>> getSegmentIdToContactApis(
+            @Field("id") String id
+    );
+
 }

@@ -48,7 +48,8 @@ public class SubscribersFragment extends Fragment {
     ContactAdapter adapter;
 
     private final String signupdatespinner[] = {"Sign up Date"};
-    private final String between2datesspinner[] = {"whenever", "between 2 dates"};
+    //private final String between2datesspinner[] = {"whenever", "between 2 dates"};
+    private final String between2datesspinner[] = {"between 2 dates"};
 
     String signupdateselected;
     String between2datesselected;
@@ -162,6 +163,77 @@ public class SubscribersFragment extends Fragment {
                 }
                 System.out.println(dateholder+"\t"+date1 +"\n"+ dateholder2 + "\t"+date2);
 
+                Retrofit retrofit = new Retrofit.Builder()
+                        //has to have "http://" or it wont work
+                        .baseUrl("http://mpmp-env26.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+                System.out.println("hereeeeeeeeeeee5");
+
+                Date datecalender = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                System.out.println(formatter.format(datecalender));
+
+                Call<List<Contact>> call7 = jsonPlaceHolderApi.getDateContactApis(
+                        dateholder,dateholder2
+
+                );
+                call7.enqueue(new Callback<List<Contact>>() {
+                    @Override
+                    public void onResponse(Call<List<Contact>> call7, Response<List<Contact>> response) {
+                        if(!response.isSuccessful()){
+                            try {
+                                System.out.println("Code: " + response.code() +""+ response.errorBody().string());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return;
+                        }
+                        System.out.println("*");
+                        //its a list of whatever is inside
+                        List<Contact> contactApis = response.body();
+                        System.out.println("************"+response.body().toString());
+                        System.out.println("***********"+contactApis);
+                        System.out.println("***********"+contactApis.size());
+                        //this should only have 1 lenth
+                        //if(customfeildApis.size() == 1) {
+                        //    for (Customfeild customfeildApi : customfeildApis) {
+                        //        String content = "";
+                        //        content += "A name: " + customfeildApi.getName() + "\n";
+                        //        content += "A dateofcreation: " + customfeildApi.getDateofcreation() + "\n";
+                        //        content += "A lastcustomfeildupdate: " + customfeildApi.getLastcustomfeildupdate() + "\n\n";
+                        //        arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                        //        System.out.println("***********" + content);
+                        //    }
+                        //}
+                        List<Contact> contact_list2 = new ArrayList<>();
+                        adapter.contact_list.clear();
+                        for (Contact contactApi : contactApis) {
+                            String content = "";
+                            content += "A7 first name: " + contactApi.getFirstname() + "\n";
+                            content += "A7 date joined: " + contactApi.getDatejoined() + "\n";
+                            content += "A7 email: " + contactApi.getEmailaddress() + "\n\n";
+                            //arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                            System.out.println("***********" + content);
+                            contact_list2.add(new Contact(contactApi.getLifetimevalue(),contactApi.getDatejoined(),contactApi.getEmailaddress(),contactApi.getFirstname(),contactApi.getLastname()));
+                            adapter.contact_list.add(new Contact(contactApi.getLifetimevalue(),contactApi.getDatejoined(),contactApi.getEmailaddress(),contactApi.getFirstname(),contactApi.getLastname()));
+
+                        }
+
+                        //adapter.contact_list.add(new Contact(h,"Jan 06,2022 6:01PM","update1@bell.net","update1","here"));
+                        //adapter.contact_list.add(new Contact(t,"Jan 06, 2022 6:09PM","update2@bell.net","update2","here"));
+                        adapter.notifyDataSetChanged();
+
+                    }
+                    @Override
+                    public void onFailure(Call<List<Contact>> call7, Throwable t) {
+
+                        System.out.println("********"+t.getMessage());
+                    }
+                });
+                /*
                 //if the current date is between the two provided dates
                 Date datefromdatabase = new Date();
 
@@ -181,8 +253,9 @@ public class SubscribersFragment extends Fragment {
                     adapter.contact_list.add(new Contact(h,"Jan 06,2022 6:01PM","update1@bell.net","update1","here"));
                     adapter.contact_list.add(new Contact(t,"Jan 06, 2022 6:09PM","update2@bell.net","update2","here"));
                     adapter.notifyDataSetChanged();
-                }
 
+                }
+                */
 
                 //introtext_txt.setText(dayorweekselected + dayselected + segmentselected);
 
