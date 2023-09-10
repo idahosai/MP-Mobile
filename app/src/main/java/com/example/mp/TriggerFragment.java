@@ -98,7 +98,7 @@ public class TriggerFragment extends Fragment {
         ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(segments));
         Retrofit retrofit = new Retrofit.Builder()
                 //has to have "http://" or it wont work
-                .baseUrl("http://mpmp-env25.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);

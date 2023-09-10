@@ -14,6 +14,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //for rekontition
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -68,6 +70,13 @@ dependencies {
     //Thanks for using https://jar-download.com
 
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    
+
+    //aws rekcognition
+
+    implementation 'com.amazonaws:aws-android-sdk-rekognition:2.3.9'
+
+
+    //for aws rekcognition
+    implementation 'androidx.multidex:multidex:2.0.1'
 
 }

@@ -3,6 +3,9 @@ package com.example.mp;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -12,20 +15,43 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.rekognition.AmazonRekognition;
+import com.amazonaws.services.rekognition.AmazonRekognitionClient;
+import com.amazonaws.services.rekognition.model.Attribute;
+import com.amazonaws.services.rekognition.model.DetectFacesRequest;
+import com.amazonaws.services.rekognition.model.DetectFacesResult;
+import com.amazonaws.services.rekognition.model.FaceDetail;
+
+import com.amazonaws.services.rekognition.model.Image;
+import com.amazonaws.services.rekognition.model.S3Object;
+import com.amazonaws.util.IOUtils;
+
+
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +70,9 @@ public class BlocksFragment extends Fragment {
     private Button scoreimage2_btn;
     private EditText imageurl_edttxt;
     private EditText imageurl2_edttxt;
+
+    private TextView trustworthynessscore_txt;
+    private TextView trustworthynessscore2_txt;
 
     Handler mainHandler = new Handler();
     ProgressDialog progressDialog;
@@ -65,6 +94,8 @@ public class BlocksFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_blocks, container,false);
 
 
+        trustworthynessscore_txt = view.findViewById(R.id.trustworthynessscore_txt);
+        trustworthynessscore2_txt = view.findViewById(R.id.trustworthynessscore2_txt);
 
         imageurl_edttxt = view.findViewById(R.id.imageurl_edttxt);
 
@@ -82,6 +113,34 @@ public class BlocksFragment extends Fragment {
         emailcontentbox_txt = view.findViewById(R.id.emailcontentbox_txt);
 
         goemailcontent_btn = view.findViewById(R.id.goemailcontent_btn);
+
+        scoreimage_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("score image button pushed");
+
+                BlocksFragment.ExecuteTaskInBackround4 executeTaskInBackround = new BlocksFragment.ExecuteTaskInBackround4();
+                executeTaskInBackround.execute();
+                //new RekognizeImage().start();
+
+                System.out.println("outside score image button pushed");
+            }
+        });
+
+        scoreimage2_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("2score image button pushed");
+
+                BlocksFragment.ExecuteTaskInBackround5 executeTaskInBackround = new BlocksFragment.ExecuteTaskInBackround5();
+                executeTaskInBackround.execute();
+                //new RekognizeImage().start();
+
+                System.out.println("2outside score image button pushed");
+            }
+        });
+
+
 
         fetchimage_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,6 +352,157 @@ public class BlocksFragment extends Fragment {
     }
 
 
+
+
+
+    //for rekognition
+
+    private void detectarostro1() throws IOException {
+        AWSCredentials credentials = new BasicAWSCredentials("AKIAVLYFJVTVBK3FQATH", "jPgfNirpqZCZhHolISpYbf4cQognJkpiEYjdDo88");
+        AmazonRekognition rekognitionClient = new AmazonRekognitionClient(credentials);
+        rekognitionClient.setRegion(Region.getRegion(Regions.US_EAST_2));
+        //
+        Bitmap bm=((BitmapDrawable)imageforscore_img.getDrawable()).getBitmap();
+        System.out.println("bitmap"+ bm.toString());
+        //
+        //
+        //create a file to write bitmap data
+        File f = new File(getContext().getCacheDir(),"firstimage");
+//f.createNewFile(); (No need to call as FileOutputStream will automatically create the file)
+//Convert bitmap to byte array
+        Bitmap bitmap = bm;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+    byte[] bitmapdata = bos.toByteArray();
+    //write the bytes in file
+    FileOutputStream fos = new FileOutputStream(f);
+        fos.write(bitmapdata);
+        fos.flush();
+        fos.close();
+        System.out.println("file"+ f.getAbsolutePath().toString());
+    //
+    ByteBuffer imageBytes = null;
+        try (InputStream inputStream = new FileInputStream(f)) {
+        imageBytes = ByteBuffer.wrap(IOUtils.toByteArray(inputStream));
+        //
+
+
+        DetectFacesRequest request = new DetectFacesRequest()
+                .withImage(new Image()
+                        .withBytes(imageBytes))
+                .withAttributes(String.valueOf(Attribute.ALL));
+
+        DetectFacesResult result = rekognitionClient.detectFaces(request);
+        List<FaceDetail> faceDetails = result.getFaceDetails();
+        for (FaceDetail face : faceDetails) {
+            //trustworthynessscore_txt.setText(face.getSmile().toString() + ": " + face.getSmile().getConfidence().toString() + "/n" + face.getMouthOpen() + ": " + face.getMouthOpen().getConfidence() + "/n");
+
+            Float totalconfidence =  (face.getSmile().getConfidence() + face.getMouthOpen().getConfidence())/2;
+            trustworthynessscore_txt.setText("Trust Score: " +totalconfidence.toString());
+
+            System.out.println("face.getSmile"+ face.getSmile().toString());
+            System.out.println("face.getSmile.getCOnfidence"+ face.getSmile().getConfidence().toString());
+            System.out.println("face.getMouthOpen()"+ face.getMouthOpen().toString());
+            System.out.println("face.getMouthOpen().getConfidence()"+ face.getMouthOpen().getConfidence().toString());
+        }
+    } catch (Error | IOException e) {
+        e.printStackTrace();
+    }
+}
+
+
+
+
+
+
+
+
+
+    private void detectarostro2() throws IOException {
+        AWSCredentials credentials = new BasicAWSCredentials("AKIAVLYFJVTVBK3FQATH", "jPgfNirpqZCZhHolISpYbf4cQognJkpiEYjdDo88");
+        AmazonRekognition rekognitionClient = new AmazonRekognitionClient(credentials);
+        rekognitionClient.setRegion(Region.getRegion(Regions.US_EAST_2));
+        //
+        Bitmap bm=((BitmapDrawable)imageforscore2_img.getDrawable()).getBitmap();
+        //File img = (File)bm;
+        //
+        //create a file to write bitmap data
+        File f = new File(getContext().getCacheDir(),"secondimage");
+//f.createNewFile(); (No need to call as FileOutputStream will automatically create the file)
+//Convert bitmap to byte array
+        Bitmap bitmap = bm;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+        //write the bytes in file
+        FileOutputStream fos = new FileOutputStream(f);
+        fos.write(bitmapdata);
+        fos.flush();
+        fos.close();
+        //
+
+        ByteBuffer imageBytes = null;
+        try (InputStream inputStream = new FileInputStream(f)) {
+            imageBytes = ByteBuffer.wrap(IOUtils.toByteArray(inputStream));
+
+            //
+
+
+            DetectFacesRequest request = new DetectFacesRequest()
+                    .withImage(new Image()
+                            .withBytes(imageBytes))
+                    .withAttributes(String.valueOf(Attribute.ALL));
+
+            DetectFacesResult result = rekognitionClient.detectFaces(request);
+            List<FaceDetail> faceDetails = result.getFaceDetails();
+            for (FaceDetail face : faceDetails) {
+                trustworthynessscore2_txt.setText(face.getSmile().toString() + ": " + face.getSmile().getConfidence().toString() + "/n" + face.getMouthOpen() + ": " + face.getMouthOpen().getConfidence() + "/n");
+
+                Float totalconfidence =  (face.getSmile().getConfidence() + face.getMouthOpen().getConfidence())/2;
+                trustworthynessscore2_txt.setText("Trust Score: " +totalconfidence.toString());
+
+                System.out.println("seccond face.getSmile"+ face.getSmile().toString());
+                System.out.println("seccond face.getSmile.getCOnfidence"+ face.getSmile().getConfidence().toString());
+                System.out.println("seccond face.getMouthOpen()"+ face.getMouthOpen().toString());
+                System.out.println("seccond face.getMouthOpen().getConfidence()"+ face.getMouthOpen().getConfidence().toString());
+            }
+        } catch (Error  | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public class ExecuteTaskInBackround4 extends AsyncTask<Void,Void,Void> {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            try {
+                detectarostro1();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("there ways an error in button push");
+            }
+            return null;
+        }
+    }
+
+    public class ExecuteTaskInBackround5 extends AsyncTask<Void,Void,Void> {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            try {
+                detectarostro2();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("2there ways an error in button push");
+            }
+            return null;
+        }
+    }
+
+//above is the aws code
+
     class FetchImage extends Thread{
 
         String url;
@@ -336,6 +546,16 @@ public class BlocksFragment extends Fragment {
 
                     }
                     imageforscore_img.setImageBitmap(bitmap);
+
+
+                    /*
+                    try {
+                        detectarostro1();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    */
+
                 }
             });
         }
@@ -387,6 +607,17 @@ public class BlocksFragment extends Fragment {
 
                     }
                     imageforscore2_img.setImageBitmap(bitmap);
+
+                    /*
+                    try {
+                        detectarostro2();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                     */
+                    
+
                 }
             });
         }

@@ -63,6 +63,7 @@ public class CreateworkflowFragment extends Fragment {
     RecyclerView recycler_view;
     EmailAdapter adapter;
 
+
     private ImageButton trigger_imgbtn;
     private ImageButton delay_imgbtn;
     private ImageButton condition_imgbtn;
@@ -98,7 +99,7 @@ public class CreateworkflowFragment extends Fragment {
         public void run() {
 
             System.out.println("sent email at correct time interval");
-
+            //3
             ExecuteTaskInBackround3 executeTaskInBackround3 = new ExecuteTaskInBackround3();
             executeTaskInBackround3.execute();
 
@@ -280,6 +281,8 @@ public class CreateworkflowFragment extends Fragment {
 
 
                 String getValue = getArguments().getString("send frequency");
+                System.out.println("2going into setupforsendddddddddddddddddddddddddddddddddd");
+
                 setupforsend();
 
 
@@ -540,7 +543,10 @@ public class CreateworkflowFragment extends Fragment {
             //this is a trail to see what works
             String mailFrom = "igbinosaidahosai@gmail.com";
             //String password = "Iggyboy4$";
-            String password = "nsvafjkawqiwzbqe";
+            //nsvafjkawqiwzbqe
+            //jswvkouhgohcwgli
+            //khbvitqhipuvtqyp
+            String password = "khbvitqhipuvtqyp";
             String host = "smtp.gmail.com";
             //String port = "465";
             String port = "587";
@@ -792,11 +798,16 @@ public class CreateworkflowFragment extends Fragment {
 
         }
 
+        System.out.println("***************************setupforsend********************************");
+
+        System.out.println("*countchecked"+countchecked);
+        System.out.println("*getvalue0"+getValue0);
+
         if (countchecked > Integer.parseInt(getValue0)) {
             holder = countchecked / Integer.parseInt(getValue0);
 
             rholder = countchecked % Integer.parseInt(getValue0);
-            System.out.println("***********************************************************");
+            System.out.println("***************************jojo********************************");
             //whole number
             System.out.println(Math.floor(holder));
             //just the remainder
@@ -847,9 +858,11 @@ public class CreateworkflowFragment extends Fragment {
             } else {
                 //gather Integer.parseInt(getValue0) together
                 // Math.floor(holder) times
+                //I NEED TO FILL THIS AREA COMPLEATELY WITH CODE
             }
         } else {
             //send all the checked boxes at once
+            //I NEED TO FILL THIS AREA COMPLEATELY WITH CODE
         }
 
         //loop through list and remove len over 1 from it

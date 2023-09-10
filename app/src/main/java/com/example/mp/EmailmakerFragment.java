@@ -459,7 +459,11 @@ public class EmailmakerFragment extends Fragment {
 
             //
             String mailFrom = "ae30c81fcfa156";
-            String password = "db1462228c8403";
+            //
+            //db1462228c8403
+            //jswvkouhgohcwgli
+            //khbvitqhipuvtqyp
+            String password = "khbvitqhipuvtqyp";
             String host = "smtp.mailtrap.io";
             String port = "2525";
 
