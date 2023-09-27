@@ -358,6 +358,7 @@ public class BlocksFragment extends Fragment {
     //for rekognition
 
     private void detectarostro1() throws IOException {
+        //this has to be secret
         AWSCredentials credentials = new BasicAWSCredentials("AKIAVLYFJVTVBK3FQATH", "jPgfNirpqZCZhHolISpYbf4cQognJkpiEYjdDo88");
         AmazonRekognition rekognitionClient = new AmazonRekognitionClient(credentials);
         rekognitionClient.setRegion(Region.getRegion(Regions.US_EAST_2));

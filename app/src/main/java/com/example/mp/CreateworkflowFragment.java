@@ -17,6 +17,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
+import org.quartz.Job;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.SimpleTrigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -55,6 +66,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 //import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateworkflowFragment extends Fragment {
@@ -98,12 +111,22 @@ public class CreateworkflowFragment extends Fragment {
         @Override
         public void run() {
 
+            System.out.println("                                      ");
+            System.out.println("                                      ");
+            System.out.println("                                      ");
+            System.out.println("                                      ");
+            System.out.println("                                      ");
             System.out.println("sent email at correct time interval");
             //3
             ExecuteTaskInBackround3 executeTaskInBackround3 = new ExecuteTaskInBackround3();
             executeTaskInBackround3.execute();
 
-
+            /*
+            //temp change
+            System.out.println(formatter.format(datecalender));
+            System.out.println("time:" + datecalender.getTime());
+            System.out.println("date" + datecalender.getDate());
+            */
         }
     };
 
@@ -293,9 +316,24 @@ public class CreateworkflowFragment extends Fragment {
 
                 if (getValue == "Everyday") {
 
-
+                    /*
+                    try {
+                        sendtoquartzqueue();
+                    } catch (SchedulerException e) {
+                        e.printStackTrace();
+                    }
+                    */
                     everydayselected();
 
+                    //datecalender = new Date();
+                    //String[] arrOfStr = getValue4.split(":");
+                    //datecalender.setHours(Integer.parseInt("08"));
+                    //datecalender.setMinutes(Integer.parseInt("25"));
+                    //System.out.println(formatter.format(datecalender));
+                    //System.out.println("time:" + datecalender.getTime());
+                    //System.out.println("date" + datecalender.getDate());
+                    //System.out.println("******************yo***************************");
+                    //timer.scheduleAtFixedRate(task, datecalender, 8640000);//1 days
 
 
                 } else if (getValue == "Week") {
@@ -314,6 +352,11 @@ public class CreateworkflowFragment extends Fragment {
 
         return view;
     }
+
+
+
+
+
 
     /*
     private ImageButton trigger_imgbtn;
@@ -356,68 +399,253 @@ public class CreateworkflowFragment extends Fragment {
 
             String combinedgetValue10 = "";
 
+            boolean getridof = false;
 
             String holdnewgetValue10 = "";
             String getValue10 = getArguments().getString("post rss block");
             holdnewgetValue10 = getValue10.toString();
 
             System.out.println("groupedlenover: "+groupedlenover1);
-            //loop through over 1 len then remove it from list
-            for (int i = 0; i < groupedlenover1.size(); i++) {
-                if(groupedlenover1.get(i).size()>1){
-                    //for each len, add to the string the item by structure if the block
+            if (groupedlenover1.size() != 0) {
 
-                    if (passthrough == 0){
-                        //do what i have to do with the groupedlenover1{[],[]} then
-                        temppositioni = i;
-                        newestgrouplenover1.clear();
-                        //[[link,link]]
-                        newestgrouplenover1.add(groupedlenover1.get(i));
 
-                        //{[],[]}
-                        int sizeofnewestgrouplenover1 = newestgrouplenover1.get(0).size();
+                //loop through over 1 len then remove it from list
+                //******this is only gonna capture for the the last in line for groupedlenover1*********
+                //******i need to set i to 0 to properly get the first one******
+                //**** this is always gonna run actually cus of the set up*****
+                for (int i = 0; i < groupedlenover1.size(); i++) {
+                    //**** this is always gonna run actually cus of the set up*****
+                    if (groupedlenover1.get(i).size() > 1) {
+                        //for each len, add to the string the item by structure if the block
 
-                        //String combinedgetValue10 = "";
-                        //[[link,link]]
-                        for (int u = 0; u < newestgrouplenover1.get(0).size(); u++){
-                            //getting the inside of {[link]}
-                            //newestgrouplenover1.get(0).get(u);
+                        if (passthrough == 0) {
+                            //do what i have to do with the groupedlenover1{[],[]} then
+                            temppositioni = i;
+                            newestgrouplenover1.clear();
+                            //[[link,link]]
+                            newestgrouplenover1.add(groupedlenover1.get(i));
 
-                            System.out.println("this should be the link:"+newestgrouplenover1.get(0).get(u));
+                            //{[],[]}
+                            int sizeofnewestgrouplenover1 = newestgrouplenover1.get(0).size();
+
+                            //String combinedgetValue10 = "";
+                            //[[link,link]]
+                            for (int u = 0; u < newestgrouplenover1.get(0).size(); u++) {
+                                //getting the inside of {[link]}
+                                //newestgrouplenover1.get(0).get(u);
+
+                                System.out.println("this should be the link:" + newestgrouplenover1.get(0).get(u));
+                                //find the rssobject with thesame link
+                                Rssobject getValue8 = (Rssobject) getArguments().getParcelable("rss object list");
+                                List<Item> items = getValue8.getItems();
+                                for (int g = 0; g < items.size(); g++) {
+                                    if (items.get(g).selected == true && items.get(g).link == newestgrouplenover1.get(0).get(u)) {
+                                        //items.get(g).author;
+                                        //find rss post block and based on whats in that replace it with the real value
+                                        //String getValue10 = getArguments().getString("post rss block");
+                                        //String holdnewgetValue10 = "";
+                                        holdnewgetValue10 = "";
+                                        getValue10 = getArguments().getString("post rss block");
+                                        holdnewgetValue10 = getValue10.toString();
+
+                                        System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+
+                                        if (getValue10.contains("{{author}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{author}}", items.get(g).author);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        if (getValue10.contains("{{pubDate}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{pubDate}}", items.get(g).pubDate);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        if (getValue10.contains("{{title}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{title}}", items.get(g).title);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        if (getValue10.contains("{{link}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{link}}", items.get(g).link);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        if (getValue10.contains("{{description}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{description}}", items.get(g).description);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        //combinedgetValue10.concat(getValue10);
+                                        combinedgetValue10 = combinedgetValue10.concat("\n");
+                                        combinedgetValue10 = combinedgetValue10.concat(holdnewgetValue10);
+                                    }
+
+                                }
+                                // change string that will be sent as email
+
+                            }
+
+                            //then
+                            //groupedlenover1.remove(i);
+
+                            passthrough = 1;
+
+                            getridof = true;
+                        }
+
+
+                        //getridof = true;
+
+                    } else if (groupedlenover1.get(i).size() == 1) {
+                        if (passthrough == 0) {
+                            //do what i have to do with the groupedlenover1{[],[]} then
+                            temppositioni = i;
+                            newestgrouplenover1.clear();
+                            //[[link,link]]
+                            newestgrouplenover1.add(groupedlenover1.get(i));
+
+                            //{[],[]}
+                            int sizeofnewestgrouplenover1 = newestgrouplenover1.get(0).size();
+
+                            //String combinedgetValue10 = "";
+                            //[[link,link]]
+                            for (int u = 0; u < newestgrouplenover1.get(0).size(); u++) {
+                                //getting the inside of {[link]}
+                                //newestgrouplenover1.get(0).get(u);
+
+                                System.out.println("this should be the link:" + newestgrouplenover1.get(0).get(u));
+                                //find the rssobject with thesame link
+                                Rssobject getValue8 = (Rssobject) getArguments().getParcelable("rss object list");
+                                List<Item> items = getValue8.getItems();
+                                for (int g = 0; g < items.size(); g++) {
+                                    if (items.get(g).selected == true && items.get(g).link == newestgrouplenover1.get(0).get(u)) {
+                                        //items.get(g).author;
+                                        //find rss post block and based on whats in that replace it with the real value
+                                        //String getValue10 = getArguments().getString("post rss block");
+                                        //String holdnewgetValue10 = "";
+                                        holdnewgetValue10 = "";
+                                        getValue10 = getArguments().getString("post rss block");
+                                        holdnewgetValue10 = getValue10.toString();
+
+                                        System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+
+                                        if (getValue10.contains("{{author}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{author}}", items.get(g).author);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        if (getValue10.contains("{{pubDate}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{pubDate}}", items.get(g).pubDate);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        if (getValue10.contains("{{title}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{title}}", items.get(g).title);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        if (getValue10.contains("{{link}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{link}}", items.get(g).link);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        if (getValue10.contains("{{description}}")) {
+                                            holdnewgetValue10 = holdnewgetValue10.replace("{{description}}", items.get(g).description);
+                                            System.out.println("holdnewgetValue10:" + holdnewgetValue10);
+                                        }
+                                        //combinedgetValue10.concat(getValue10);
+                                        combinedgetValue10 = combinedgetValue10.concat("\n");
+                                        combinedgetValue10 = combinedgetValue10.concat(holdnewgetValue10);
+                                    }
+
+                                }
+                                // change string that will be sent as email
+
+                            }
+
+                            //then
+                            //groupedlenover1.remove(i);
+
+                            passthrough = 1;
+
+                            getridof = true;
+                            //temp change.  maybe i get rid of this for now
+                            //task.cancel();
+                            timer.cancel();
+                        }
+
+
+                        //getridof = true;
+
+                        //cancel timer that calls this function again when reached
+                        //timer.cancel();
+                        //this is not gonna run
+                    } else if (groupedlenover1.get(i).size() < 1) {
+
+                    }
+
+                    /*
+                    if (getridof == true) {
+                        System.out.println("      groupedlenover:    " + groupedlenover1);
+                        groupedlenover1.remove(temppositioni);
+                        System.out.println("      groupedlenover:    " + groupedlenover1);
+                        getridof = false;
+                    }
+                    */
+
+                }
+
+
+                if (getridof == true) {
+                    System.out.println("      groupedlenover:    " + groupedlenover1);
+                    groupedlenover1.remove(temppositioni);
+                    System.out.println("      groupedlenover:    " + groupedlenover1);
+                    getridof = false;
+                }
+
+                //System.out.println("groupedlenover: "+groupedlenover1);
+                //groupedlenover1.remove(temppositioni);
+                //System.out.println("groupedlenover: "+groupedlenover1);
+
+                //replace the normal content string part with the rss block part
+                //combinedgetValue10
+
+                holdnewgetValue10 = "";
+
+                /*
+                //why does it run this
+                System.out.println("groupedsend1: "+groupedsend1);
+                if(groupedlenover1.size() == 0){
+                    //loop through single len then remove them all
+                    //[[link],[link],[link]]
+                    for (int i = 0; i < groupedsend1.size(); i++) {
+
+
+                        for (int u = 0; u < groupedsend1.get(i).size(); u++){
+
+
+                            System.out.println("this should be the link:"+groupedsend1.get(i));
+
                             //find the rssobject with thesame link
                             Rssobject getValue8 = (Rssobject) getArguments().getParcelable("rss object list");
                             List<Item> items = getValue8.getItems();
                             for(int g=0; g<items.size(); g++){
-                                if(items.get(g).selected == true && items.get(g).link == newestgrouplenover1.get(0).get(u)){
+                                if(items.get(g).selected == true && items.get(g).link == groupedsend1.get(i).get(u)){
                                     //items.get(g).author;
                                     //find rss post block and based on whats in that replace it with the real value
                                     //String getValue10 = getArguments().getString("post rss block");
-                                    //String holdnewgetValue10 = "";
+
                                     holdnewgetValue10 = "";
                                     getValue10 = getArguments().getString("post rss block");
                                     holdnewgetValue10 = getValue10.toString();
 
-                                    System.out.println("holdnewgetValue10:"+holdnewgetValue10);
+                                    //String holdnewgetValue10 = "";
 
                                     if(getValue10.contains("{{author}}")){
                                         holdnewgetValue10 = holdnewgetValue10.replace("{{author}}",items.get(g).author);
-                                        System.out.println("holdnewgetValue10:"+holdnewgetValue10);
                                     }
                                     if(getValue10.contains("{{pubDate}}")){
                                         holdnewgetValue10 = holdnewgetValue10.replace("{{pubDate}}",items.get(g).pubDate);
-                                        System.out.println("holdnewgetValue10:"+holdnewgetValue10);
                                     }
                                     if(getValue10.contains("{{title}}")){
                                         holdnewgetValue10 = holdnewgetValue10.replace("{{title}}",items.get(g).title);
-                                        System.out.println("holdnewgetValue10:"+holdnewgetValue10);
                                     }
                                     if(getValue10.contains("{{link}}")){
                                         holdnewgetValue10 = holdnewgetValue10.replace("{{link}}",items.get(g).link);
-                                        System.out.println("holdnewgetValue10:"+holdnewgetValue10);
                                     }
                                     if(getValue10.contains("{{description}}")){
                                         holdnewgetValue10 = holdnewgetValue10.replace("{{description}}",items.get(g).description);
-                                        System.out.println("holdnewgetValue10:"+holdnewgetValue10);
                                     }
                                     //combinedgetValue10.concat(getValue10);
                                     combinedgetValue10 = combinedgetValue10.concat("\n");
@@ -425,183 +653,126 @@ public class CreateworkflowFragment extends Fragment {
                                 }
 
                             }
-                            // change string that will be sent as email
-
-                        }
-
-                        //then
-                        //groupedlenover1.remove(i);
-
-                        passthrough = 1;
-                    }
-
-                }
-
-            }
-            System.out.println("groupedlenover: "+groupedlenover1);
-            groupedlenover1.remove(temppositioni);
-            System.out.println("groupedlenover: "+groupedlenover1);
-
-            //replace the normal content string part with the rss block part
-            //combinedgetValue10
-
-            holdnewgetValue10 = "";
-
-            //why does it run this
-            System.out.println("groupedsend1: "+groupedsend1);
-            if(groupedlenover1.size() == 0){
-                //loop through single len then remove them all
-                //[[link],[link],[link]]
-                for (int i = 0; i < groupedsend1.size(); i++) {
-
-
-                    for (int u = 0; u < groupedsend1.get(i).size(); u++){
-
-
-                        System.out.println("this should be the link:"+groupedsend1.get(i));
-
-                        //find the rssobject with thesame link
-                        Rssobject getValue8 = (Rssobject) getArguments().getParcelable("rss object list");
-                        List<Item> items = getValue8.getItems();
-                        for(int g=0; g<items.size(); g++){
-                            if(items.get(g).selected == true && items.get(g).link == groupedsend1.get(i).get(u)){
-                                //items.get(g).author;
-                                //find rss post block and based on whats in that replace it with the real value
-                                //String getValue10 = getArguments().getString("post rss block");
-
-                                holdnewgetValue10 = "";
-                                getValue10 = getArguments().getString("post rss block");
-                                holdnewgetValue10 = getValue10.toString();
-
-                                //String holdnewgetValue10 = "";
-
-                                if(getValue10.contains("{{author}}")){
-                                    holdnewgetValue10 = holdnewgetValue10.replace("{{author}}",items.get(g).author);
-                                }
-                                if(getValue10.contains("{{pubDate}}")){
-                                    holdnewgetValue10 = holdnewgetValue10.replace("{{pubDate}}",items.get(g).pubDate);
-                                }
-                                if(getValue10.contains("{{title}}")){
-                                    holdnewgetValue10 = holdnewgetValue10.replace("{{title}}",items.get(g).title);
-                                }
-                                if(getValue10.contains("{{link}}")){
-                                    holdnewgetValue10 = holdnewgetValue10.replace("{{link}}",items.get(g).link);
-                                }
-                                if(getValue10.contains("{{description}}")){
-                                    holdnewgetValue10 = holdnewgetValue10.replace("{{description}}",items.get(g).description);
-                                }
-                                //combinedgetValue10.concat(getValue10);
-                                combinedgetValue10 = combinedgetValue10.concat("\n");
-                                combinedgetValue10 = combinedgetValue10.concat(holdnewgetValue10);
-                            }
 
                         }
 
                     }
-
+                    //cancel timer that calls this function again when reached
+                    timer.cancel();
                 }
-                //cancel timer that calls this function again when reached
+
+                */
+                System.out.println("this RSS Post block is:"+combinedgetValue10);
+
+                //get content box string and put the rss block where it belongs
+
+                String combinedgetValue13 = "";
+                String holdnewgetValue13 = "";
+                String getValue13 = getArguments().getString("email content");
+                holdnewgetValue13 = getValue13.toString();
+                String getValue11 = getArguments().getString("image1");
+                String getValue12 = getArguments().getString("image2");
+                //String holdnewgetValue10 = "";
+                if(getValue13.contains("{{rss}}")){
+                    holdnewgetValue13 = holdnewgetValue13.replace("{{rss}}",combinedgetValue10);
+                }
+                if(getValue13.contains("{{image1}}")){
+                    //
+
+                    holdnewgetValue13 = holdnewgetValue13.replace("{{image1}}"," <img src=\'"+getValue11.toString()+"\' width=\'"+"15%"+"\' height=\'"+"15%"+"\' /> ");
+                }
+                if(getValue13.contains("{{image2}}")){
+                    holdnewgetValue13 = holdnewgetValue13.replace("{{image2}}"," <img src=\'"+getValue12.toString()+"\' width=\'"+"15%"+"\' height=\'"+"15%"+"\' /> ");
+                }
+                //combinedgetValue10.concat(getValue10);
+                System.out.println("combinedgetValue13 is:"+combinedgetValue13);
+                combinedgetValue13 = combinedgetValue13.concat(holdnewgetValue13);
+
+
+
+                //
+                /*
+                String mailFrom = "ae30c81fcfa156";
+                String password = "db1462228c8403";
+                String host = "smtp.mailtrap.io";
+                String port = "2525";
+                */
+                //String port = "2525";
+
+                //this is a trail to see what works
+                String mailFrom = "igbinosaidahosai@gmail.com";
+                //String password = "Iggyboy4$";
+                //nsvafjkawqiwzbqe
+                //jswvkouhgohcwgli
+                //khbvitqhipuvtqyp
+                String password = "khbvitqhipuvtqyp";
+                String host = "smtp.gmail.com";
+                //String port = "465";
+                String port = "587";
+                //192.168.2.220
+                //192.168.2.1
+                //String mailTo = "idahosai@sheridancollege.ca";
+
+                // message info
+                //String mailTo = "YOUR_RECIPIENT";
+
+
+                String mailTo = "idahosai@sheridancollege.ca";
+                String getValue7 = getArguments().getString("subjectline");
+                String subject = getValue7.toString();
+                StringBuffer body
+                        = new StringBuffer("<html>"+combinedgetValue13.toString());
+                //body.append("The first image is a chart:<br>");
+                //body.append("<img src=\"cid:image1\" width=\"30%\" height=\"30%\" /><br>");
+                //body.append("The second one is a cube:<br>");
+                //body.append("<img src=\"cid:image2\" width=\"15%\" height=\"15%\" /><br>");
+
+                //the below code line works
+                //body.append("<img src=\'"+"https://images.pexels.com/photos/1097456/pexels-photo-1097456.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"+"\' />");
+
+                //body.append("<img src=\"https://images.pexels.com/photos/1097456/pexels-photo-1097456.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\" width=\"15%\" height=\"15%\" /><br>");
+                //body.append("End of message.");
+                body.append("</html>");
+                System.out.println("body is:"+body.toString());
+
+                // inline images
+                Map<String, String> inlineImages = new HashMap<String, String>();
+                //Path p = Paths.get("C:\\Users\\idah\\AndroidStudioProjects\\MP\\app\\src\\main\\res\\drawable\\email.png");
+                //Path p2 = Paths.get("C:\\Users\\idah\\AndroidStudioProjects\\MP\\app\\src\\main\\res\\drawable\\action.png");
+                //String file = p.getFileName().toString();
+                //String file2 = p2.getFileName().toString();
+                //inlineImages.put("image1", "C:\\Users\\nidah\\AndroidStudioProjects\\MP\\app\\src\\main\\res\\drawable\\action.png");
+                //inlineImages.put("image2", "C:\\Users\\nidah\\AndroidStudioProjects\\MP\\app\\src\\main\\res\\drawable\\action.png");
+                //inlineImages.put("image1", "C:/forsend.png");
+                //inlineImages.put("image2", "C:/Users/nidah/AndroidStudioProjects/MP/app/src/main/res/drawable/email.png");
+
+                try {
+
+
+                    for(String email : emaillist) {
+                        send2(host, port, mailFrom, password, email,
+                                subject, body.toString(), inlineImages, emaillist);
+                    }
+
+                    //send2(host, port, mailFrom, password, mailTo,
+                    //                        subject, body.toString(), inlineImages, emaillist);
+
+                    System.out.println("Email sent.***********************************************************************");
+                } catch (Exception ex) {
+                    //Toast.makeText(vie.getContext(), "here"+ex, Toast.LENGTH_SHORT).show();
+                    System.out.println("Could not send email.***************************************************************");
+                    System.out.println("" + ex);
+                    ex.printStackTrace();
+                }
+                //temp change maybe add this here
+                return null;
+
+            } else {
                 timer.cancel();
+                return null;
+
             }
-
-            System.out.println("this RSS Post block is:"+combinedgetValue10);
-
-            //get content box string and put the rss block where it belongs
-
-            String combinedgetValue13 = "";
-            String holdnewgetValue13 = "";
-            String getValue13 = getArguments().getString("email content");
-            holdnewgetValue13 = getValue13.toString();
-            String getValue11 = getArguments().getString("image1");
-            String getValue12 = getArguments().getString("image2");
-            //String holdnewgetValue10 = "";
-            if(getValue13.contains("{{rss}}")){
-                holdnewgetValue13 = holdnewgetValue13.replace("{{rss}}",combinedgetValue10);
-            }
-            if(getValue13.contains("{{image1}}")){
-
-                holdnewgetValue13 = holdnewgetValue13.replace("{{image1}}","<img src='"+getValue11.toString()+"'/>");
-            }
-            if(getValue13.contains("{{image2}}")){
-                holdnewgetValue13 = holdnewgetValue13.replace("{{image2}}","<img src='"+getValue12.toString()+"'/>");
-            }
-            //combinedgetValue10.concat(getValue10);
-            System.out.println("combinedgetValue13 is:"+combinedgetValue13);
-            combinedgetValue13 = combinedgetValue13.concat(holdnewgetValue13);
-
-
-
-            //
-            /*
-            String mailFrom = "ae30c81fcfa156";
-            String password = "db1462228c8403";
-            String host = "smtp.mailtrap.io";
-            String port = "2525";
-            */
-            //String port = "2525";
-
-            //this is a trail to see what works
-            String mailFrom = "igbinosaidahosai@gmail.com";
-            //String password = "Iggyboy4$";
-            //nsvafjkawqiwzbqe
-            //jswvkouhgohcwgli
-            //khbvitqhipuvtqyp
-            String password = "khbvitqhipuvtqyp";
-            String host = "smtp.gmail.com";
-            //String port = "465";
-            String port = "587";
-            //192.168.2.220
-            //192.168.2.1
-            //String mailTo = "idahosai@sheridancollege.ca";
-
-            // message info
-            //String mailTo = "YOUR_RECIPIENT";
-
-
-            String mailTo = "idahosai@sheridancollege.ca";
-            String getValue7 = getArguments().getString("subjectline");
-            String subject = getValue7.toString();
-            StringBuffer body
-                    = new StringBuffer("<html>"+combinedgetValue13.toString());
-            //body.append("The first image is a chart:<br>");
-            //body.append("<img src=\"cid:image1\" width=\"30%\" height=\"30%\" /><br>");
-            //body.append("The second one is a cube:<br>");
-            //body.append("<img src=\"cid:image2\" width=\"15%\" height=\"15%\" /><br>");
-            //body.append("<img src=\"https://images.pexels.com/photos/1097456/pexels-photo-1097456.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\" width=\"15%\" height=\"15%\" /><br>");
-            //body.append("End of message.");
-            body.append("</html>");
-            System.out.println("body is:"+body.toString());
-
-            // inline images
-            Map<String, String> inlineImages = new HashMap<String, String>();
-            //Path p = Paths.get("C:\\Users\\idah\\AndroidStudioProjects\\MP\\app\\src\\main\\res\\drawable\\email.png");
-            //Path p2 = Paths.get("C:\\Users\\idah\\AndroidStudioProjects\\MP\\app\\src\\main\\res\\drawable\\action.png");
-            //String file = p.getFileName().toString();
-            //String file2 = p2.getFileName().toString();
-            //inlineImages.put("image1", "C:\\Users\\nidah\\AndroidStudioProjects\\MP\\app\\src\\main\\res\\drawable\\action.png");
-            //inlineImages.put("image2", "C:\\Users\\nidah\\AndroidStudioProjects\\MP\\app\\src\\main\\res\\drawable\\action.png");
-            //inlineImages.put("image1", "C:/forsend.png");
-            //inlineImages.put("image2", "C:/Users/nidah/AndroidStudioProjects/MP/app/src/main/res/drawable/email.png");
-
-            try {
-
-
-                for(String email : emaillist) {
-                    send2(host, port, mailFrom, password, email,
-                            subject, body.toString(), inlineImages, emaillist);
-                }
-                //send2(host, port, mailFrom, password, mailTo,
-                //                        subject, body.toString(), inlineImages, emaillist);
-
-                System.out.println("Email sent.***********************************************************************");
-            } catch (Exception ex) {
-                //Toast.makeText(vie.getContext(), "here"+ex, Toast.LENGTH_SHORT).show();
-                System.out.println("Could not send email.***************************************************************");
-                System.out.println("" + ex);
-                ex.printStackTrace();
-            }
-
-            return null;
+            //return null;
         }
     }
 
@@ -766,7 +937,7 @@ public class CreateworkflowFragment extends Fragment {
 
 
 
-    public void setupforsend(){
+    public void setupforsend() {
 
         String getValue0 = getArguments().getString("number of articles");
         String getValue = getArguments().getString("send frequency");
@@ -788,7 +959,6 @@ public class CreateworkflowFragment extends Fragment {
         List<Item> myitems = getValue8.getItems();
 
 
-
         for (int i = 0; i < myitems.size(); i++) {
             //System.out.println(df.get(i).selected);
             //System.out.println(df.get(i).link);
@@ -800,9 +970,10 @@ public class CreateworkflowFragment extends Fragment {
 
         System.out.println("***************************setupforsend********************************");
 
-        System.out.println("*countchecked"+countchecked);
-        System.out.println("*getvalue0"+getValue0);
+        System.out.println("*countchecked" + countchecked);
+        System.out.println("*getvalue0" + getValue0);
 
+        //****the number of articles cant be zero***
         if (countchecked > Integer.parseInt(getValue0)) {
             holder = countchecked / Integer.parseInt(getValue0);
 
@@ -832,16 +1003,16 @@ public class CreateworkflowFragment extends Fragment {
                         if (groupcount == Integer.parseInt(getValue0)) {
                             groupedsend.add(insidelist);
                             //jk.clear();
-                            System.out.println("insidelist:"+insidelist);
+                            System.out.println("insidelist:" + insidelist);
                             insidelist = new ArrayList<>();
                             groupcount = 0;
                             System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-                            System.out.println("insidelist A:"+insidelist);
-                            System.out.println("groupedsend: "+groupedsend);
+                            System.out.println("insidelist A:" + insidelist);
+                            System.out.println("groupedsend: " + groupedsend);
                             maxcount = maxcount + 1;
                         } else if (maxcount == Math.floor(holder)) {
                             groupedsend.add(insidelist);
-                            System.out.println("groupedsend B"+groupedsend);
+                            System.out.println("groupedsend B" + groupedsend);
                         }
                     }
 
@@ -849,9 +1020,186 @@ public class CreateworkflowFragment extends Fragment {
 
                 //see whats inside my arrays
                 for (int i = 0; i < groupedsend.size(); i++) {
-                    System.out.println("groupedsend.get(i) :"+groupedsend.get(i));
+                    System.out.println("groupedsend.get(i) :" + groupedsend.get(i));
                     for (int o = 0; o < groupedsend.get(i).size(); o++) {
-                        System.out.println("groupedsend.get(i).get(o) :"+groupedsend.get(i).get(o));
+                        System.out.println("groupedsend.get(i).get(o) :" + groupedsend.get(i).get(o));
+                    }
+                }
+
+            } else {
+
+
+                //temp change
+                //i need to recheck this
+                //gather Integer.parseInt(getValue0) together
+                // Math.floor(holder) times
+                //I NEED TO FILL THIS AREA COMPLEATELY WITH CODE
+                for (int i = 0; i < myitems.size(); i++) {
+                    //System.out.println(df.get(i).selected);
+                    //System.out.println(df.get(i).link);
+
+                    if (myitems.get(i).selected == true) {
+                        insidelist.add(myitems.get(i).link);
+                        groupcount = groupcount + 1;
+                        //if group count - number of articles
+                        if (groupcount == Integer.parseInt(getValue0)) {
+                            groupedsend.add(insidelist);
+                            //jk.clear();
+                            System.out.println("insidelist:" + insidelist);
+                            insidelist = new ArrayList<>();
+                            groupcount = 0;
+                            System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+                            System.out.println("insidelist A:" + insidelist);
+                            System.out.println("groupedsend: " + groupedsend);
+                            maxcount = maxcount + 1;
+                        } else if (maxcount == Math.floor(holder)) {
+                            groupedsend.add(insidelist);
+                            System.out.println("groupedsend B" + groupedsend);
+                        }
+                    }
+
+                }
+
+
+            }
+        } else if (countchecked == Integer.parseInt(getValue0)) {
+            //send all the checked boxes at once
+            //I NEED TO FILL THIS AREA COMPLEATELY WITH CODE
+            holder = countchecked / Integer.parseInt(getValue0);
+
+            rholder = countchecked % Integer.parseInt(getValue0);
+            System.out.println("***************************jojo********************************");
+            //whole number
+            System.out.println(Math.floor(holder));
+            //just the remainder
+            System.out.println(rholder);
+            //if a remainder exist
+            for (int i = 0; i < myitems.size(); i++) {
+                //System.out.println(df.get(i).selected);
+                //System.out.println(df.get(i).link);
+
+                if (myitems.get(i).selected == true) {
+                    insidelist.add(myitems.get(i).link);
+                    groupcount = groupcount + 1;
+                    //if group count - number of articles
+                    if (groupcount == Integer.parseInt(getValue0)) {
+                        groupedsend.add(insidelist);
+                        //jk.clear();
+                        System.out.println("insidelist:" + insidelist);
+                        insidelist = new ArrayList<>();
+                        groupcount = 0;
+                        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+                        System.out.println("insidelist A:" + insidelist);
+                        System.out.println("groupedsend: " + groupedsend);
+                        maxcount = maxcount + 1;
+                        //this doesn't get called
+                    } else if (maxcount == Math.floor(holder)) {
+                        groupedsend.add(insidelist);
+                        System.out.println("groupedsend B" + groupedsend);
+                    }
+                }
+
+            }
+
+
+        } else if(countchecked < Integer.parseInt(getValue0)){
+
+            /*
+            holder = countchecked / Integer.parseInt(getValue0);
+
+            rholder = countchecked % Integer.parseInt(getValue0);
+            System.out.println("***************************jojo********************************");
+            //whole number
+            System.out.println(Math.floor(holder));
+            //just the remainder
+            System.out.println(rholder);
+            //if a remainder exist
+            for (int i = 0; i < myitems.size(); i++) {
+                //System.out.println(df.get(i).selected);
+                //System.out.println(df.get(i).link);
+
+                if (myitems.get(i).selected == true) {
+                    insidelist.add(myitems.get(i).link);
+                    groupcount = groupcount + 1;
+                    //if group count - number of articles
+                    if (groupcount == Integer.parseInt(getValue0)) {
+                        groupedsend.add(insidelist);
+                        //jk.clear();
+                        System.out.println("insidelist:" + insidelist);
+                        insidelist = new ArrayList<>();
+                        groupcount = 0;
+                        System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+                        System.out.println("insidelist A:" + insidelist);
+                        System.out.println("groupedsend: " + groupedsend);
+                        //maxcount = maxcount + 1;
+                    }
+                        //this doesn't need to be called again
+                    //} else if (maxcount == Math.floor(holder)) {
+                    //    groupedsend.add(insidelist);
+                    //    System.out.println("groupedsend B" + groupedsend);
+                    //}
+                }
+
+            }
+            */
+
+
+            holder = countchecked / Integer.parseInt(getValue0);
+
+            rholder = countchecked % Integer.parseInt(getValue0);
+            System.out.println("***************************jojo********************************");
+            //whole number
+            System.out.println(Math.floor(holder));
+            //just the remainder
+            System.out.println(rholder);
+            //if a remainder exist
+            if (rholder != 0.00) {
+                //gather Integer.parseInt(getValue0) together
+                // Math.floor(holder) times then do it by max number of true selected items
+                // in existance remaining
+                List<Item> d = getValue8.getItems();
+
+                //List<List<String>> groupedsend = new ArrayList<List<String>>();
+                //ArrayList<String> insidelist= new ArrayList<>();
+
+                int actualarticlesselected = 0;
+                for (int i = 0; i < myitems.size(); i++) {
+                    //System.out.println(df.get(i).selected);
+                    //System.out.println(df.get(i).link);
+
+                    if (myitems.get(i).selected == true) {
+                        actualarticlesselected = actualarticlesselected + 1;
+                    }
+                }
+
+                for (int i = 0; i < myitems.size(); i++) {
+                    //System.out.println(df.get(i).selected);
+                    //System.out.println(df.get(i).link);
+
+                    if (myitems.get(i).selected == true) {
+                        insidelist.add(myitems.get(i).link);
+                        groupcount = groupcount + 1;
+
+                        if (groupcount == actualarticlesselected) {
+                            groupedsend.add(insidelist);
+                            //jk.clear();
+                            System.out.println("insidelist:" + insidelist);
+                            //insidelist = new ArrayList<>();
+                            groupcount = 0;
+                            System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+                            System.out.println("insidelist A:" + insidelist);
+                            System.out.println("groupedsend: " + groupedsend);
+                            //maxcount = maxcount + 1;
+                        }
+                    }
+
+                }
+
+                //see whats inside my arrays
+                for (int i = 0; i < groupedsend.size(); i++) {
+                    System.out.println("groupedsend.get(i) :" + groupedsend.get(i));
+                    for (int o = 0; o < groupedsend.get(i).size(); o++) {
+                        System.out.println("groupedsend.get(i).get(o) :" + groupedsend.get(i).get(o));
                     }
                 }
 
@@ -859,15 +1207,55 @@ public class CreateworkflowFragment extends Fragment {
                 //gather Integer.parseInt(getValue0) together
                 // Math.floor(holder) times
                 //I NEED TO FILL THIS AREA COMPLEATELY WITH CODE
+
+                int actualarticlesselected = 0;
+                for (int i = 0; i < myitems.size(); i++) {
+                    //System.out.println(df.get(i).selected);
+                    //System.out.println(df.get(i).link);
+
+                    if (myitems.get(i).selected == true) {
+                        actualarticlesselected = actualarticlesselected + 1;
+                    }
+                }
+
+                for (int i = 0; i < myitems.size(); i++) {
+                    //System.out.println(df.get(i).selected);
+                    //System.out.println(df.get(i).link);
+
+                    if (myitems.get(i).selected == true) {
+                        insidelist.add(myitems.get(i).link);
+                        groupcount = groupcount + 1;
+                        //if group count - number of articles
+                        if (groupcount == actualarticlesselected) {
+                            groupedsend.add(insidelist);
+                            //jk.clear();
+                            System.out.println("insidelist:" + insidelist);
+                            //insidelist = new ArrayList<>();
+                            groupcount = 0;
+                            System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+                            System.out.println("insidelist A:" + insidelist);
+                            System.out.println("groupedsend: " + groupedsend);
+                            //maxcount = maxcount + 1;
+                        }
+                    }
+
+                }
             }
-        } else {
-            //send all the checked boxes at once
-            //I NEED TO FILL THIS AREA COMPLEATELY WITH CODE
         }
 
         //loop through list and remove len over 1 from it
         System.out.println("groupedsend G :"+groupedsend);
         for (int i = 0; i < groupedsend.size(); i++) {
+            if (groupedsend.get(i).size() > 0) {
+                groupedlenover1.add(groupedsend.get(i));
+                System.out.println("groupedsend G1 :"+groupedsend);
+                //storedfordelete.add(i);
+
+                //store it up for future delete
+                //groupedsend.remove(i);
+                //System.out.println("groupedsend G1done :"+groupedsend);
+            }
+            /*
             if (groupedsend.get(i).size() > 1) {
                 groupedlenover1.add(groupedsend.get(i));
                 System.out.println("groupedsend G1 :"+groupedsend);
@@ -879,6 +1267,7 @@ public class CreateworkflowFragment extends Fragment {
             }
             if (groupedsend.get(i).size() == 1) {
                 //groupedlenover1.add(groupedsend.get(i));
+                //groupedsend1 only exist if groupedsend.get(i).size() == 1, it is it at size 1 so [[]]
                 groupedsend1.add(groupedsend.get(i));
                 System.out.println("groupedsend1 G1 :"+groupedsend1);
 
@@ -886,6 +1275,7 @@ public class CreateworkflowFragment extends Fragment {
                 //groupedsend.remove(i);
                 //System.out.println("groupedsend G1done :"+groupedsend);
             }
+            */
         }
         //groupedsend1.clear();
 
@@ -904,7 +1294,7 @@ public class CreateworkflowFragment extends Fragment {
 
 
 
-    public void everydayselected(){
+    public void everydayselected() {
 
         String getValue0 = getArguments().getString("number of articles");
         String getValue = getArguments().getString("send frequency");
@@ -4902,6 +5292,8 @@ public class CreateworkflowFragment extends Fragment {
             System.out.println("date" + datecalender.getDate());
             System.out.println("*********************************************");
             timer.scheduleAtFixedRate(task, datecalender, 8640000);//1 days
+            
+
         }
 
 

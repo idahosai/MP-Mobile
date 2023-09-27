@@ -79,4 +79,7 @@ dependencies {
     //for aws rekcognition
     implementation 'androidx.multidex:multidex:2.0.1'
 
+    //for messaging queue
+    implementation 'org.quartz-scheduler:quartz:2.3.0'
+    //implementation 'org.springframework.boot:string-boot-starter-quartz'
 }

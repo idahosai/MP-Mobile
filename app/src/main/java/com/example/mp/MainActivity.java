@@ -160,6 +160,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.forwardtoinbox:
                 //Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
                 break;
+
+            case R.id.exittoapp:
+                Intent intentMain = new Intent(MainActivity.this , LoginActivity.class);
+                startActivity(intentMain);
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
 
