@@ -85,14 +85,33 @@ public class WorkflowFragment extends Fragment {
                 fragmentTransaction.commit();
                 */
 
+                CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+                String content = "";
+                content += "model: " + checkSigninApi.getModel() + "\n";
+                content += "pk: " + checkSigninApi.getPk() + "\n";
+                content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+                System.out.println("*****B******" + content);
 
+                Fragment ldf = new TriggerFragment();
+                Bundle args = new Bundle();
+                args.putParcelable("thestaff",checkSigninApi);
+                ldf.setArguments(args);
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, ldf);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
+                /*
                 Fragment fragment = new TriggerFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
+                */
 
             }
         });

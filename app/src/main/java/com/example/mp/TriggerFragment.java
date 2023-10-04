@@ -93,12 +93,13 @@ public class TriggerFragment extends Fragment {
         everydayorweek_spn.setAdapter(adapter);
         daysofweek_spn.setAdapter(adapter2);
 
+        CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
 
         //begin
         ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(segments));
         Retrofit retrofit = new Retrofit.Builder()
                 //has to have "http://" or it wont work
-                .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                .baseUrl("http://mpmp-env42.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -109,7 +110,7 @@ public class TriggerFragment extends Fragment {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println(formatter.format(datecalender));
 
-        Call<List<Segment>> call6 = jsonPlaceHolderApi.getSegmentApis();
+        Call<List<Segment>> call6 = jsonPlaceHolderApi.getSegmentApis(checkSigninApi.getPk());
         call6.enqueue(new Callback<List<Segment>>() {
             @Override
             public void onResponse(Call<List<Segment>> call6, Response<List<Segment>> response) {
@@ -233,6 +234,32 @@ public class TriggerFragment extends Fragment {
             public void onClick(View v) {
 
 
+                CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+                String content = "";
+                content += "model: " + checkSigninApi.getModel() + "\n";
+                content += "pk: " + checkSigninApi.getPk() + "\n";
+                content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+                System.out.println("*****B******" + content);
+
+                Fragment ldf = new EmailmakerFragment();
+                Bundle args = new Bundle();
+                args.putParcelable("thestaff",checkSigninApi);
+
+
+                args.putString("number of articles", numberofarticles_edttxt.getText().toString());
+                args.putString("send frequency", dayorweekselected);
+                args.putString("days selected", dayselected);
+                args.putString("subscriber segment",segmentselected);
+                args.putString("time",timeinput_edttxt.getText().toString());
+                args.putBoolean("send automatically",sendautomatically_chk.isChecked());
+                ldf.setArguments(args);
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, ldf);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                /*
                 Fragment ldf = new EmailmakerFragment();
                 Bundle args = new Bundle();
                 args.putString("number of articles", numberofarticles_edttxt.getText().toString());
@@ -248,7 +275,7 @@ public class TriggerFragment extends Fragment {
                 fragmentTransaction.replace(R.id.fragment_container, ldf);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
+                */
 
             }
         });

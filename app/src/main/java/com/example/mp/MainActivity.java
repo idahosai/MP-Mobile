@@ -118,17 +118,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 */
     @Override
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
+        CheckSigninApi checkSigninApi = (CheckSigninApi) getIntent().getParcelableExtra("staff");
+        String content = "";
+        content += "model: " + checkSigninApi.getModel() + "\n";
+        content += "pk: " + checkSigninApi.getPk() + "\n";
+        content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+        System.out.println("*****A******" + content);
+
+
+
         switch (item.getItemId()){
             case R.id.home:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new HomeFragment()).commit();
                 break;
             case R.id.email:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new WorkflowFragment()).commit();
+
+                Fragment ldf3 = new WorkflowFragment();
+                Bundle args3 = new Bundle();
+                args3.putParcelable("thestaff",checkSigninApi);
+                ldf3.setArguments(args3);
+
+                FragmentManager fragmentManager3 = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction3 = fragmentManager3.beginTransaction();
+                fragmentTransaction3.replace(R.id.fragment_container, ldf3);
+                //fragmentTransaction.addToBackStack(null);
+                fragmentTransaction3.commit();
+
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                //        new WorkflowFragment()).commit();
                 break;
             case R.id.importcontacts:
-
+                /*
                 CheckSigninApi checkSigninApi = (CheckSigninApi) getIntent().getParcelableExtra("staff");
                 String content = "";
                 content += "model: " + checkSigninApi.getModel() + "\n";
@@ -136,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
                 System.out.println("*****A******" + content);
 
-
+                */
                 Fragment ldf = new ImportmanuallyFragment();
                 Bundle args = new Bundle();
                 args.putParcelable("thestaff",checkSigninApi);
@@ -153,8 +174,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //        new ImportmanuallyFragment()).commit();
                 break;
             case R.id.face:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new SubscribersFragment()).commit();
+
+                Fragment ldf2 = new SubscribersFragment();
+                Bundle args2 = new Bundle();
+                args2.putParcelable("thestaff",checkSigninApi);
+                ldf2.setArguments(args2);
+
+                FragmentManager fragmentManager2 = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
+                fragmentTransaction2.replace(R.id.fragment_container, ldf2);
+                //fragmentTransaction.addToBackStack(null);
+                fragmentTransaction2.commit();
+
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                //        new SubscribersFragment()).commit();
                 //Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.forwardtoinbox:

@@ -196,7 +196,10 @@ public class CreateworkflowFragment extends Fragment {
 
 
                 //below
-                //below
+                //below was just recently added on 2023-10-04
+                CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+                //checkSigninApi.getPk()
+
                 String getValue3 = getArguments().getString("subscriber segment");
                 System.out.println(getValue3);
 

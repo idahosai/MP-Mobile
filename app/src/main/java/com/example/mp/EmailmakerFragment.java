@@ -174,6 +174,13 @@ public class EmailmakerFragment extends Fragment {
 
 
 
+                CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+                String content = "";
+                content += "model: " + checkSigninApi.getModel() + "\n";
+                content += "pk: " + checkSigninApi.getPk() + "\n";
+                content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+                System.out.println("*****B******" + content);
+
                 String getValue0= getArguments().getString("number of articles");
                 String getValue= getArguments().getString("send frequency");
                 String getValue2= getArguments().getString("days selected");
@@ -192,6 +199,7 @@ public class EmailmakerFragment extends Fragment {
 
                 Fragment ldf = new BlocksFragment();
                 Bundle args = new Bundle();
+                args.putParcelable("thestaff",checkSigninApi);
                 args.putString("number of articles", getValue0);
                 args.putString("send frequency", getValue);
                 args.putString("days selected", getValue2);

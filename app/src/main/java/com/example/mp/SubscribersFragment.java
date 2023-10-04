@@ -1,5 +1,7 @@
 package com.example.mp;
 
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,6 +46,7 @@ public class SubscribersFragment extends Fragment {
     Button saveassegment_btn;
     Button search_btn;
 
+
     RecyclerView recycler_view_contacts;
     ContactAdapter adapter;
 
@@ -54,6 +57,7 @@ public class SubscribersFragment extends Fragment {
     String signupdateselected;
     String between2datesselected;
 
+    CheckSigninApi checkSigninApi;
 
 
     @Nullable
@@ -80,9 +84,11 @@ public class SubscribersFragment extends Fragment {
                 //save in segment table then save the segment in attachedsegment table
                 //introtext_txt.setText(dayorweekselected + dayselected + segmentselected);
 
+                CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+
                 Retrofit retrofit = new Retrofit.Builder()
                         //has to have "http://" or it wont work
-                        .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .baseUrl("http://mpmp-env42.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -94,7 +100,7 @@ public class SubscribersFragment extends Fragment {
                 System.out.println(formatter.format(datecalender));
 
                 Call<List<Segment>> call5 = jsonPlaceHolderApi.getSegmentApis(
-                        segmentname_edttxt.getText().toString(), datewritten1_edttxt.getText().toString(),datewritten2_edttxt.getText().toString(),formatter.format(datecalender)
+                        segmentname_edttxt.getText().toString(), datewritten1_edttxt.getText().toString(),datewritten2_edttxt.getText().toString(),formatter.format(datecalender),checkSigninApi.getPk()
 
                 );
                 call5.enqueue(new Callback<List<Segment>>() {
@@ -163,9 +169,11 @@ public class SubscribersFragment extends Fragment {
                 }
                 System.out.println(dateholder+"\t"+date1 +"\n"+ dateholder2 + "\t"+date2);
 
+                CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+
                 Retrofit retrofit = new Retrofit.Builder()
                         //has to have "http://" or it wont work
-                        .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .baseUrl("http://mpmp-env42.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -177,7 +185,7 @@ public class SubscribersFragment extends Fragment {
                 System.out.println(formatter.format(datecalender));
 
                 Call<List<Contact>> call7 = jsonPlaceHolderApi.getDateContactApis(
-                        dateholder,dateholder2
+                        dateholder,dateholder2, checkSigninApi.getPk()
 
                 );
                 call7.enqueue(new Callback<List<Contact>>() {
@@ -194,9 +202,9 @@ public class SubscribersFragment extends Fragment {
                         System.out.println("*");
                         //its a list of whatever is inside
                         List<Contact> contactApis = response.body();
-                        System.out.println("************"+response.body().toString());
-                        System.out.println("***********"+contactApis);
-                        System.out.println("***********"+contactApis.size());
+                        System.out.println("******search******"+response.body().toString());
+                        System.out.println("*****search******"+contactApis);
+                        System.out.println("*****search******"+contactApis.size());
                         //this should only have 1 lenth
                         //if(customfeildApis.size() == 1) {
                         //    for (Customfeild customfeildApi : customfeildApis) {
@@ -212,9 +220,9 @@ public class SubscribersFragment extends Fragment {
                         adapter.contact_list.clear();
                         for (Contact contactApi : contactApis) {
                             String content = "";
-                            content += "A7 first name: " + contactApi.getFirstname() + "\n";
-                            content += "A7 date joined: " + contactApi.getDatejoined() + "\n";
-                            content += "A7 email: " + contactApi.getEmailaddress() + "\n\n";
+                            content += "A7 search first name: " + contactApi.getFirstname() + "\n";
+                            content += "A7 search date joined: " + contactApi.getDatejoined() + "\n";
+                            content += "A7 search email: " + contactApi.getEmailaddress() + "\n\n";
                             //arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
                             System.out.println("***********" + content);
                             contact_list2.add(new Contact(contactApi.getLifetimevalue(),contactApi.getDatejoined(),contactApi.getEmailaddress(),contactApi.getFirstname(),contactApi.getLastname()));
@@ -306,12 +314,33 @@ public class SubscribersFragment extends Fragment {
 
         recycler_view_contacts = view.findViewById(R.id.recycler_view_contacts);
 
+
+        //checkSigninApi= (CheckSigninApi) this.getArguments().getParcelable("thestaff");
+
+        //ExecuteTaskInBackroundnow executeTaskInBackround3 = new ExecuteTaskInBackroundnow();
+        //executeTaskInBackround3.execute();
         setRecyclerView2();
 
 
         return view;
 
     }
+
+    /*
+    public class ExecuteTaskInBackroundnow extends AsyncTask<Void, Void, Void> {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            setRecyclerView2();
+            return null;
+        }
+    }
+    */
 
     private void setRecyclerView2(){
         recycler_view_contacts.setHasFixedSize(true);
@@ -388,9 +417,12 @@ public class SubscribersFragment extends Fragment {
     private void getList(){
         List<Contact> contact_list = new ArrayList<>();
 
+        CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+        //System.out.println("checkSigninApi.getPk()=" + checkSigninApi.getPk());
+
         Retrofit retrofit = new Retrofit.Builder()
                 //has to have "http://" or it wont work
-                .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                .baseUrl("http://mpmp-env42.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -398,7 +430,8 @@ public class SubscribersFragment extends Fragment {
         System.out.println("hereeeeeeeeeeee4");
 
 
-        Call<List<Contact>> call4 = jsonPlaceHolderApi.getContactApis();
+        //Call<List<Contact>> call4 = jsonPlaceHolderApi.getContactApis(checkSigninApi.getPk());
+        Call<List<Contact>> call4 = jsonPlaceHolderApi.getContactApis(checkSigninApi.getPk());
         call4.enqueue(new Callback<List<Contact>>() {
             @Override
             public void onResponse(Call<List<Contact>> call4, Response<List<Contact>> response) {

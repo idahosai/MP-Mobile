@@ -42,7 +42,8 @@ public interface JsonPlaceHolderApi {
             @Field("zip") String zip,
             @Field("website") String website,
 
-            @Field("addmethod") String addmethod
+            @Field("addmethod") String addmethod,
+            @Field("staffpk") String staffpk
     );
 
     @POST("CreateCustomfeildView/")
@@ -60,7 +61,7 @@ public interface JsonPlaceHolderApi {
     );
 
     @GET("CreateCustomfeild2View/")
-    Call<List<Customfeild>> getCustomfeildApis();
+    Call<List<Customfeild>> getCustomfeildApis(@Query("staffpk") String staffpk);
 
 
     @POST("CreateCustomfeild2View/")
@@ -75,11 +76,11 @@ public interface JsonPlaceHolderApi {
     );
 
     @GET("CreateContact2View/")
-    Call<List<Contact>> getContactApis();
+    Call<List<Contact>> getContactApis(@Query("staffpk") String staffpk);
 
 
     @GET("CreateSegmentView/")
-    Call<List<Segment>> getSegmentApis();
+    Call<List<Segment>> getSegmentApis(@Query("staffpk") String staffpk);
 
     @POST("CreateSegmentView/")
     @FormUrlEncoded
@@ -87,15 +88,17 @@ public interface JsonPlaceHolderApi {
             @Field("name") String name,
             @Field("dateone") String dateone,
             @Field("datetwo") String datetwo,
-            @Field("dateofcreation") String dateofcreation
+            @Field("dateofcreation") String dateofcreation,
+            @Field("staffpk") String staffpk
 
     );
 
-    @POST("CreateContact3View/")
-    @FormUrlEncoded
+
+    @GET("CreateContact3View/")
     Call<List<Contact>> getDateContactApis(
-            @Field("date1") String date1,
-            @Field("date2") String date2
+            @Query("date1") String date1,
+            @Query("date2") String date2,
+            @Query("staffpk") String staffpk
 
     );
 

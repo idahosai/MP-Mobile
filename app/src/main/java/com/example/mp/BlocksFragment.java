@@ -223,7 +223,12 @@ public class BlocksFragment extends Fragment {
                 */
 
 
-
+                CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+                String content = "";
+                content += "model: " + checkSigninApi.getModel() + "\n";
+                content += "pk: " + checkSigninApi.getPk() + "\n";
+                content += "fields: " + checkSigninApi.getFields().getUsername() + "\n\n";
+                System.out.println("*****B******" + content);
 
 
 
@@ -243,6 +248,7 @@ public class BlocksFragment extends Fragment {
 
                 Fragment ldf = new CreateworkflowFragment();
                 Bundle args = new Bundle();
+                args.putParcelable("thestaff",checkSigninApi);
                 args.putString("number of articles", getValue0);
                 args.putString("send frequency", getValue);
                 args.putString("days selected", getValue2);

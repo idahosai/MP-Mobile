@@ -118,7 +118,7 @@ public class ListcustomfeilditemFragment extends Fragment {
 
                 Retrofit retrofit = new Retrofit.Builder()
                         //has to have "http://" or it wont work
-                        .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .baseUrl("http://mpmp-env42.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -144,6 +144,8 @@ public class ListcustomfeilditemFragment extends Fragment {
                         website_edttxt.getText().toString(),"Manually"
                 );
                 */
+                CheckSigninApi checkSigninApi2= (CheckSigninApi) getArguments().getParcelable("thestaff");
+
                 Call<List<ContactApi>> call = jsonPlaceHolderApi.createContact(
                         formatter.format(datecalender),"",email_edttxt.getText().toString(),firstname_edttxt.getText().toString(),
                         lastname_edttxt.getText().toString(),jobtitle_edttxt.getText().toString(),
@@ -151,7 +153,7 @@ public class ListcustomfeilditemFragment extends Fragment {
                         workphone_edttxt.getText().toString(),country_edttxt.getText().toString(),
                         stateprovince_edttxt.getText().toString(),city_edttxt.getText().toString(),
                         address_edttxt.getText().toString(), zippostalcode_edtxt.getText().toString(),
-                        website_edttxt.getText().toString(),"Manually"
+                        website_edttxt.getText().toString(),"Manually",checkSigninApi2.getPk()
                 );
 
                 call.enqueue(new Callback<List<ContactApi>>() {
@@ -208,7 +210,7 @@ public class ListcustomfeilditemFragment extends Fragment {
                             //System.out.println("*****C******" + content);
                             Retrofit retrofit = new Retrofit.Builder()
                                     //has to have "http://" or it wont work
-                                    .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                                    .baseUrl("http://mpmp-env42.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                                     .addConverterFactory(GsonConverterFactory.create())
                                     .build();
                             JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -364,7 +366,7 @@ public class ListcustomfeilditemFragment extends Fragment {
 
         Retrofit retrofit = new Retrofit.Builder()
                 //has to have "http://" or it wont work
-                .baseUrl("http://mpmp-env27.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                .baseUrl("http://mpmp-env42.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -376,8 +378,8 @@ public class ListcustomfeilditemFragment extends Fragment {
         //System.out.println(formatter2.format(datecalender2));
         System.out.println("hereeeeeeeeeeee3");
 
-
-        Call<List<Customfeild>> call3 = jsonPlaceHolderApi.getCustomfeildApis();
+        CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+        Call<List<Customfeild>> call3 = jsonPlaceHolderApi.getCustomfeildApis(checkSigninApi.getPk());
         call3.enqueue(new Callback<List<Customfeild>>() {
             @Override
             public void onResponse(Call<List<Customfeild>> call3, Response<List<Customfeild>> response) {
