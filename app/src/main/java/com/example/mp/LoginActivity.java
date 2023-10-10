@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Retrofit retrofit = new Retrofit.Builder()
                         //has to have "http://" or it wont work
-                        .baseUrl("http://mpmp-env41.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .baseUrl("http://mpmp-env43.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 

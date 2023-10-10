@@ -108,4 +108,22 @@ public interface JsonPlaceHolderApi {
             @Field("id") String id
     );
 
+    @GET("GetIsRegisteredEmailApis/")
+    Call<List<Contact>> getIsRegisteredEmailApis(
+            @Query("emailaddress") String emailaddress
+
+    );
+
+    @POST("CreateRegisterAccountApis/")
+    @FormUrlEncoded
+    Call<Staff> getRegisterAccountApis(
+            @Field("username") String username,
+            @Field("firstname") String firstname,
+            @Field("lastname") String lastname,
+            @Field("emailaddress") String emailaddress,
+            @Field("password") String password,
+            @Field("industry") String industry
+    );
+
+
 }
