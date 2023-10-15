@@ -64,6 +64,7 @@ public class BlocksFragment extends Fragment {
     ImageView imageforscore2_img;
 
 
+
     private Button fetchimage_btn;
     private Button scoreimage_btn;
     private Button fetchimage2_btn;
