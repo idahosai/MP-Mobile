@@ -51,6 +51,21 @@ public class LoginActivity extends AppCompatActivity {
         //Intent intent = new Intent(this, RegisterActivity.class);
         //startActivity(intent);
 
+        forgetpassword_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent myIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                //myIntent.putExtra("key", 5); //Optional parameters
+                //MainActivity.this.startActivity(myIntent);
+
+                Intent intentMain = new Intent(LoginActivity.this , ForgetpasswordActivity.class);
+                startActivity(intentMain);
+                //createNewStudentAuth();
+                //createNewStudentAccount(44);
+
+            }
+        });
+
 
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override

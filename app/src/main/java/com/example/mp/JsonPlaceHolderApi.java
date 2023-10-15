@@ -125,5 +125,8 @@ public interface JsonPlaceHolderApi {
             @Field("industry") String industry
     );
 
+    @GET("GetRecoverPasswordApis/")
+    Call<Staff> getRecoverPasswordApis(@Query("emailaddress") String emailaddress);
+
 
 }
