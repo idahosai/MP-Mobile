@@ -129,4 +129,13 @@ public interface JsonPlaceHolderApi {
     Call<Staff> getRecoverPasswordApis(@Query("emailaddress") String emailaddress);
 
 
+    @POST("CreateAccountInformationApis/")
+    @FormUrlEncoded
+    Call<Staff> getAccountInformationApis(
+            @Field("firstname") String firstname,
+            @Field("lastname") String lastname,
+            @Field("username") String username,
+            @Field("id") String id
+    );
+
 }

@@ -194,6 +194,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
                 break;
 
+            case R.id.accountbox:
+                Fragment ldf4 = new AccountinformationFragment();
+                Bundle args4 = new Bundle();
+                args4.putParcelable("thestaff",checkSigninApi);
+                ldf4.setArguments(args4);
+
+                FragmentManager fragmentManager4 = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction4 = fragmentManager4.beginTransaction();
+                fragmentTransaction4.replace(R.id.fragment_container, ldf4);
+                //fragmentTransaction.addToBackStack(null);
+                fragmentTransaction4.commit();
+                break;
+
             case R.id.exittoapp:
                 Intent intentMain = new Intent(MainActivity.this , LoginActivity.class);
                 startActivity(intentMain);
