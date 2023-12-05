@@ -75,7 +75,7 @@ public class AccountinformationFragment extends Fragment {
 
                 Retrofit retrofit2 = new Retrofit.Builder()
                         //has to have "http://" or it wont work
-                        .baseUrl("http://mpmp-env45.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .baseUrl("http://mpmp-env49.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 JsonPlaceHolderApi jsonPlaceHolderApi2 = retrofit2.create(JsonPlaceHolderApi.class);

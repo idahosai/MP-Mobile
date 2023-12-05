@@ -87,7 +87,7 @@ import javax.mail.internet.MimeMultipart;
 
 public class EmailmakerFragment extends Fragment {
 
-    private Button sendemail_btn;
+    //private Button sendemail_btn;
     private Button namerssgo_btn;
     private Button feedurlgo_btn;
     private Button subjectlinego_btn;
@@ -136,7 +136,7 @@ public class EmailmakerFragment extends Fragment {
 
         //loadRSS();
 
-        sendemail_btn = (Button) view.findViewById(R.id.sendemail_btn);
+        //sendemail_btn = (Button) view.findViewById(R.id.sendemail_btn);
 
         namerssgo_btn = (Button) view.findViewById(R.id.namerssgo_btn);
         feedurlgo_btn = (Button) view.findViewById(R.id.feedurlgo_btn);
@@ -226,85 +226,17 @@ public class EmailmakerFragment extends Fragment {
 
             }});
 
+        /*
         sendemail_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*
-                Intent myIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-                myIntent.putExtra("key", 5); //Optional parameters
-                RegisterActivity.this.startActivity(myIntent);
-                */
-                //createNewStudentAuth();
-                //createNewStudentAccount(44);
-
-
-                /*
-                // SMTP info
-                String host = "smtp.gmail.com";
-                String port = "587";
-                //String mailFrom = "YOUR_EMAIL";
-                //String password = "YOUR_PASSWORD";
-                String mailFrom = "iidahosa@bell.net";
-                String password = "igbinosa3";
-                */
-                //
-                //String host = "smtp.mailtrap.io";
-                //String port = "2525";
-                //ssl = no
-                //tls = yes
-                //String mailFrom = "ae30c81fcfa156";
-                //String password = "db1462228c8403";
-
-                //
-                /*
-                String mailFrom = "ae30c81fcfa156";
-                String password = "db1462228c8403";
-                String host = "smtp.mailtrap.io";
-                String port = "2525";
-
-
-                // message info
-                //String mailTo = "YOUR_RECIPIENT";
-                String mailTo = "idahosai@sheridancollege.ca";
-                String subject = "Test e-mail with inline images";
-                StringBuffer body
-                        = new StringBuffer("<html>This message contains two inline images.<br>");
-                body.append("The first image is a chart:<br>");
-                //body.append("<img src=\"cid:image1\" width=\"30%\" height=\"30%\" /><br>");
-                body.append("The second one is a cube:<br>");
-                //body.append("<img src=\"cid:image2\" width=\"15%\" height=\"15%\" /><br>");
-                body.append("End of message.");
-                body.append("</html>");
-
-                // inline images
-                Map<String, String> inlineImages = new HashMap<String, String>();
-                //inlineImages.put("image1", "E:/Test/chart.png");
-                //inlineImages.put("image2", "E:/Test/cube.jpg");
-
-                try {
-                    send(host, port, mailFrom, password, mailTo,
-                            subject, body.toString(), inlineImages);
-                    System.out.println("Email sent.***********************************************************************");
-                } catch (Exception ex) {
-                    Toast.makeText(vie.getContext(), "here"+ex, Toast.LENGTH_SHORT).show();
-                    System.out.println("Could not send email.***************************************************************");
-                    System.out.println("" + ex);
-                    ex.printStackTrace();
-                }
-                */
-
                 System.out.println("*********************************************************************");
                 //System.out.println(readRSS("http://rss.cnn.com/rss/edition.rss"));
-
-
                 ExecuteTaskInBackround executeTaskInBackround = new ExecuteTaskInBackround();
                 executeTaskInBackround.execute();
-
-                //ExecuteTaskInBackround2 executeTaskInBackround2 = new ExecuteTaskInBackround2();
-                //executeTaskInBackround2.execute();
             }
         });
+        */
 
 
         /*

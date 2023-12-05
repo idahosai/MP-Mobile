@@ -16,8 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WorkflowFragment extends Fragment {
 
@@ -127,7 +134,7 @@ public class WorkflowFragment extends Fragment {
 
 
 
-
+    /*
     private void setRecyclerView() {
         recycler_view.setHasFixedSize(true);
         recycler_view.setLayoutManager(new LinearLayoutManager(recycler_view.getContext()));
@@ -136,20 +143,82 @@ public class WorkflowFragment extends Fragment {
     }
     private List<Email> getList(){
         List<Email> email_list = new ArrayList<>();
-        email_list.add(new Email("1", "birthday boy", "Active", "RSS Broadcast", "375", 7.00,
-                "6.99", "null", "1",
-                "Aug 20,2022 2:01PM", "Jan 03, 2022 4:09PM", 0.2, 5.0, 1.0, 0.6,
-                "welcome contacts", 1, 2, 1, 1,
-                1, 1, 1));
 
-        email_list.add(new Email("2", "holliday boy", "Publised", "A Broadcast", "278", 7.00,
-                "6.99", "null", "2",
-                "Feb 21,2022 3:01PM", "Sep 05, 2022 5:09PM", 0.2, 5.0, 1.0, 0.6,
-                "welcome contacts", 2, 1, 2, 2,
-                2, 1, 2));
+        email_list.add(new Email(1,"birthday boy", 0, "Aug 20,2022 2:01PM","welcome contacts",0));
+        email_list.add(new Email(2,"holliday boy", 0, "Feb 21,2022 3:01PM","welcome contacts",0));
         return email_list;
     }
+    */
+    private void setRecyclerView() {
+        recycler_view.setHasFixedSize(true);
+        recycler_view.setLayoutManager(new LinearLayoutManager(recycler_view.getContext()));
+        getList();
+        //adapter = new EmailAdapter(recycler_view.getContext(), );
+        //recycler_view.setAdapter(adapter);
+    }
+    private void getList(){
+        //List<Email> email_list = new ArrayList<>();
 
+        //email_list.add(new Email(1,"birthday boy", 0, "Aug 20,2022 2:01PM","welcome contacts",0));
+        //email_list.add(new Email(2,"holliday boy", 0, "Feb 21,2022 3:01PM","welcome contacts",0));
+        //return email_list;
+
+        List<Email> email_list = new ArrayList<>();
+
+        CheckSigninApi checkSigninApi= (CheckSigninApi) getArguments().getParcelable("thestaff");
+        //System.out.println("checkSigninApi.getPk()=" + checkSigninApi.getPk());
+
+        Retrofit retrofit = new Retrofit.Builder()
+                //has to have "http://" or it wont work
+                .baseUrl("http://mpmp-env49.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+        System.out.println("hereeeeeeeeeeee4");
+
+
+        //Call<List<Contact>> call4 = jsonPlaceHolderApi.getContactApis(checkSigninApi.getPk());
+        Call<List<Email>> call4 = jsonPlaceHolderApi.getEmailsApis(checkSigninApi.getPk());
+        call4.enqueue(new Callback<List<Email>>() {
+            @Override
+            public void onResponse(Call<List<Email>> call4, Response<List<Email>> response) {
+                if(!response.isSuccessful()){
+                    try {
+                        System.out.println("Code: " + response.code() +""+ response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+                System.out.println("*");
+                //its a list of whatever is inside
+                List<Email> emailApis = response.body();
+                System.out.println("************"+response.body().toString());
+                System.out.println("***********"+emailApis);
+                System.out.println("***********"+emailApis.size());
+
+                for (Email emailApi : emailApis) {
+                    String content = "";
+                    content += "A4 first name: " + emailApi.getName() + "\n";
+                    content += "A4 dateofcreation: " + emailApi.getDateofcreation() + "\n";
+                    //content += "A4 last name: " + emailApi.getLastname() + "\n\n";
+                    //arrCustomfeilds.add(new Customfeild(customfeildApi.getId(),customfeildApi.getName(),customfeildApi.getCustomfeildintvalue(),customfeildApi.getCustomfeildstringvalue(),customfeildApi.getDateofcreation(),customfeildApi.getLastcustomfeildupdate()));
+                    email_list.add(new Email(emailApi.getId(),emailApi.getName(),emailApi.getNumberofcontactssentto(),emailApi.getDateofcreation(),emailApi.getSubjecttitle(),emailApi.getOpens()));
+                    System.out.println("***********" + content);
+                }
+
+
+                adapter = new EmailAdapter(recycler_view.getContext(), email_list);
+                recycler_view.setAdapter(adapter);
+            }
+            @Override
+            public void onFailure(Call<List<Email>> call4, Throwable t) {
+
+                System.out.println("********"+t.getMessage());
+            }
+        });
+    }
 
 
 }

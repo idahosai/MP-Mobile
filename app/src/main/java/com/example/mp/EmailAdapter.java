@@ -38,13 +38,13 @@ public class EmailAdapter extends RecyclerView.Adapter<EmailAdapter.ViewHolder> 
             //set text in items in 'item_layout' layout file
         if (email_list != null && email_list.size() >0){
             Email email = email_list.get(position);
-            holder.id_txt.setText(email.getId());
+            holder.id_txt.setText(email.getId().toString());
             holder.name_txt.setText(email.getName());
-            holder.status_txt.setText(email.getStatus());
-            holder.type_txt.setText(email.getType());
-            holder.senttonumber_txt.setText(email.getNumberofcontactssentto());
-            holder.stats_txt.setText(email.getAttachedstatsforautomation_id());
-            holder.datetime_txt.setText(email.getDateofcreation());
+            holder.numberofcontactssento_txt.setText(email.getNumberofcontactssentto().toString());
+            holder.dateofcreation_txt.setText(email.getDateofcreation());
+            holder.subjecttitle_txt.setText(email.getSubjecttitle());
+            holder.opens_txt.setText(email.getOpens().toString());
+            //holder.datetime_txt.setText(email.getDateofcreation());
 
         }else{
             return;
@@ -58,17 +58,17 @@ public class EmailAdapter extends RecyclerView.Adapter<EmailAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView id_txt, name_txt, status_txt, type_txt, senttonumber_txt, stats_txt, datetime_txt;
+        TextView id_txt, name_txt, numberofcontactssento_txt, dateofcreation_txt, subjecttitle_txt, opens_txt;
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             //get id of items in 'item_layout' layout file
             id_txt = itemView.findViewById(R.id.id_txt);
             name_txt = itemView.findViewById(R.id.name_txt);
-            status_txt = itemView.findViewById(R.id.status_txt);
-            type_txt = itemView.findViewById(R.id.type_txt);
-            senttonumber_txt = itemView.findViewById(R.id.senttonumber_txt);
-            stats_txt = itemView.findViewById(R.id.stats_txt);
-            datetime_txt = itemView.findViewById(R.id.datetime_txt);
+            numberofcontactssento_txt = itemView.findViewById(R.id.numberofcontactssento_txt);
+            dateofcreation_txt = itemView.findViewById(R.id.dateofcreation_txt);
+            subjecttitle_txt = itemView.findViewById(R.id.subjecttitle_txt);
+            opens_txt = itemView.findViewById(R.id.opens_txt);
+            //datetime_txt = itemView.findViewById(R.id.datetime_txt);
         }
     }
 }

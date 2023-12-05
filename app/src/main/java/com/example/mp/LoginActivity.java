@@ -29,6 +29,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button login_btn;
     private Button register_btn;
     private Button forgetpassword_btn;
+
+    private Button btn_registeremailsubscriber;
+    private Button btn_signupemailsubscriber;
+
     private TextView message_txt;
 
     @Override
@@ -48,8 +52,48 @@ public class LoginActivity extends AppCompatActivity {
 
         message_txt = findViewById(R.id.message_txt);
 
+        btn_registeremailsubscriber = (Button) findViewById(R.id.btn_registeremailsubscriber);
+
+        btn_signupemailsubscriber = (Button) findViewById(R.id.btn_signupemailsubscriber);
+
+
+
         //Intent intent = new Intent(this, RegisterActivity.class);
         //startActivity(intent);
+
+        btn_signupemailsubscriber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent myIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                //myIntent.putExtra("key", 5); //Optional parameters
+                //MainActivity.this.startActivity(myIntent);
+
+                Intent intentMain = new Intent(LoginActivity.this , LoginemailsubscriberActivity.class);
+                startActivity(intentMain);
+                //createNewStudentAuth();
+                //createNewStudentAccount(44);
+
+            }
+        });
+
+
+
+        btn_registeremailsubscriber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent myIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                //myIntent.putExtra("key", 5); //Optional parameters
+                //MainActivity.this.startActivity(myIntent);
+
+                Intent intentMain = new Intent(LoginActivity.this , RegisteremailsubscriberActivity.class);
+                startActivity(intentMain);
+                //createNewStudentAuth();
+                //createNewStudentAccount(44);
+
+            }
+        });
+
+
 
         forgetpassword_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Retrofit retrofit = new Retrofit.Builder()
                         //has to have "http://" or it wont work
-                        .baseUrl("http://mpmp-env44.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .baseUrl("http://mpmp-env49.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 

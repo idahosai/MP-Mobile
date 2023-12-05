@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 //        new ImportmanuallyFragment()).commit();
                 break;
-            case R.id.face:
+            case R.id.filterlist:
 
                 Fragment ldf2 = new SubscribersFragment();
                 Bundle args2 = new Bundle();

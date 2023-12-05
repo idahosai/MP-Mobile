@@ -2,31 +2,32 @@ package com.example.mp;
 
 public class Email {
 
-    String id;
+    Integer id;
     String name;
-    String status;
-    String type;
-    String numberofcontactssentto;
-    Double totalearnings;
-    String averageearningsperclick;
-    String attachedstatsforautomation_id;
-    String attachedstatsforautomationbroadcast_id;
+    //String status;
+    //String type;
+    Integer numberofcontactssentto;
+    //Double totalearnings;
+    //String averageearningsperclick;
+    //String attachedstatsforautomation_id;
+    //String attachedstatsforautomationbroadcast_id;
     String dateofcreation;
-    String senddateandtime;
-    Double openrate;
-    Double unsubscribers;
-    Double clickrate;
-    Double averageuserrating;
+    //String senddateandtime;
+    //Double openrate;
+    //Double unsubscribers;
+    //Double clickrate;
+    //Double averageuserrating;
     String subjecttitle;
-    Integer maxrowdown;
-    Integer maxcolumnright;
-    Integer attachedemailimage_id;
-    Integer attachedemailtextmakeup_id;
-    Integer attachedemaildiscussion_id;
-    Integer hasbeenrated;
-    Integer attachedemail_id;
+    //Integer maxrowdown;
+    //Integer maxcolumnright;
+    //Integer attachedemailimage_id;
+    //Integer attachedemailtextmakeup_id;
+    //Integer attachedemaildiscussion_id;
+    //Integer hasbeenrated;
+    //Integer attachedemail_id;
+    Integer opens;
 
-
+    /*
     public Email(String id, String name, String status, String type, String numberofcontactssentto, Double totalearnings,
                  String averageearningsperclick, String attachedstatsforautomation_id, String attachedstatsforautomationbroadcast_id,
                  String dateofcreation, String senddateandtime, Double openrate, Double unsubscribers, Double clickrate, Double averageuserrating,
@@ -57,15 +58,25 @@ public class Email {
         this.hasbeenrated = hasbeenrated;
         this.attachedemail_id = attachedemail_id;
     }
+    */
 
-    public String getId() {
+    public Email(Integer id, String name, Integer numberofcontactssentto, String dateofcreation, String subjecttitle, Integer opens){
+
+        this.id = id;
+        this.name = name;
+        this.numberofcontactssentto = numberofcontactssentto;
+        this.dateofcreation = dateofcreation;
+        this.subjecttitle = subjecttitle;
+        this.opens = opens;
+    }
+    public Integer getId() {
         return id;
     }
 
     public String getName() {
         return name;
     }
-
+    /*
     public String getStatus() {
         return status;
     }
@@ -73,11 +84,11 @@ public class Email {
     public String getType() {
         return type;
     }
-
-    public String getNumberofcontactssentto() {
+    */
+    public Integer getNumberofcontactssentto() {
         return numberofcontactssentto;
     }
-
+    /*
     public Double getTotalearnings() {
         return totalearnings;
     }
@@ -93,11 +104,11 @@ public class Email {
     public String getAttachedstatsforautomationbroadcast_id() {
         return attachedstatsforautomationbroadcast_id;
     }
-
+    */
     public String getDateofcreation() {
         return dateofcreation;
     }
-
+    /*
     public String getSenddateandtime() {
         return senddateandtime;
     }
@@ -117,11 +128,13 @@ public class Email {
     public Double getAverageuserrating() {
         return averageuserrating;
     }
+    */
 
     public String getSubjecttitle() {
         return subjecttitle;
     }
 
+    /*
     public Integer getMaxrowdown() {
         return maxrowdown;
     }
@@ -148,5 +161,9 @@ public class Email {
 
     public Integer getAttachedemail_id() {
         return attachedemail_id;
+    }
+    */
+    public Integer getOpens() {
+        return opens;
     }
 }

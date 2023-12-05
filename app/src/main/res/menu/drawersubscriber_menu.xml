@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+
+
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/homesubscriber"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="Home"></item>
+
+        <item
+            android:id="@+id/chatbotsubscriber"
+            android:icon="@drawable/ic_chatbot"
+            android:title="Chatbot"></item>
+
+
+        <item
+            android:id="@+id/chatsystem"
+            android:icon="@drawable/ic_chatsystem"
+            android:title="Chat System"></item>
+
+        <item
+            android:id="@+id/spaceholder1subscriber"
+            android:icon="@drawable/ic_baseline_forward_to_inbox_24"
+            android:title="Account Information"></item>
+
+
+        <item
+            android:id="@+id/spaceholder2subscriber"
+            android:icon="@drawable/ic_baseline_exit_to_app_24"
+            android:title="Log Out"></item>
+
+
+    </group>
+
+</menu>

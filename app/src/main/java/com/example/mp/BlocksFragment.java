@@ -63,6 +63,8 @@ public class BlocksFragment extends Fragment {
     ImageView imageforscore_img;
     ImageView imageforscore2_img;
 
+    EditText akpassword_edt;
+    EditText sapassword_edt;
 
 
     private Button fetchimage_btn;
@@ -114,6 +116,10 @@ public class BlocksFragment extends Fragment {
         emailcontentbox_txt = view.findViewById(R.id.emailcontentbox_txt);
 
         goemailcontent_btn = view.findViewById(R.id.goemailcontent_btn);
+
+        akpassword_edt = view.findViewById(R.id.akpassword_edt);
+        sapassword_edt = view.findViewById(R.id.sapassword_edt);
+
 
         scoreimage_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,7 +372,11 @@ public class BlocksFragment extends Fragment {
 
     private void detectarostro1() throws IOException {
         //this has to be secret
-        AWSCredentials credentials = new BasicAWSCredentials("AKIAVLYFJVTVBK3FQATH", "jPgfNirpqZCZhHolISpYbf4cQognJkpiEYjdDo88");
+        String akp = akpassword_edt.getText().toString();
+        String sap = sapassword_edt.getText().toString();
+
+        AWSCredentials credentials = new BasicAWSCredentials(akp, sap);
+
         AmazonRekognition rekognitionClient = new AmazonRekognitionClient(credentials);
         rekognitionClient.setRegion(Region.getRegion(Regions.US_EAST_2));
         //
@@ -406,7 +416,7 @@ public class BlocksFragment extends Fragment {
             //trustworthynessscore_txt.setText(face.getSmile().toString() + ": " + face.getSmile().getConfidence().toString() + "/n" + face.getMouthOpen() + ": " + face.getMouthOpen().getConfidence() + "/n");
 
             Float totalconfidence =  (face.getSmile().getConfidence() + face.getMouthOpen().getConfidence())/2;
-            trustworthynessscore_txt.setText("Trust Score: " +totalconfidence.toString());
+            trustworthynessscore_txt.setText("Trust Score: " +totalconfidence.toString()+"/100");
 
             System.out.println("face.getSmile"+ face.getSmile().toString());
             System.out.println("face.getSmile.getCOnfidence"+ face.getSmile().getConfidence().toString());
@@ -427,7 +437,12 @@ public class BlocksFragment extends Fragment {
 
 
     private void detectarostro2() throws IOException {
-        AWSCredentials credentials = new BasicAWSCredentials("AKIAVLYFJVTVBK3FQATH", "jPgfNirpqZCZhHolISpYbf4cQognJkpiEYjdDo88");
+        //
+        String akp = akpassword_edt.getText().toString();
+        String sap = sapassword_edt.getText().toString();
+
+        AWSCredentials credentials = new BasicAWSCredentials(akp, sap);
+
         AmazonRekognition rekognitionClient = new AmazonRekognitionClient(credentials);
         rekognitionClient.setRegion(Region.getRegion(Regions.US_EAST_2));
         //
@@ -467,7 +482,7 @@ public class BlocksFragment extends Fragment {
                 trustworthynessscore2_txt.setText(face.getSmile().toString() + ": " + face.getSmile().getConfidence().toString() + "/n" + face.getMouthOpen() + ": " + face.getMouthOpen().getConfidence() + "/n");
 
                 Float totalconfidence =  (face.getSmile().getConfidence() + face.getMouthOpen().getConfidence())/2;
-                trustworthynessscore2_txt.setText("Trust Score: " +totalconfidence.toString());
+                trustworthynessscore2_txt.setText("Trust Score: " +totalconfidence.toString()+"/100");
 
                 System.out.println("seccond face.getSmile"+ face.getSmile().toString());
                 System.out.println("seccond face.getSmile.getCOnfidence"+ face.getSmile().getConfidence().toString());

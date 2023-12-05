@@ -101,7 +101,7 @@ public class CreateworkflowFragment extends Fragment {
 
     List<String> emaillist;
 
-
+    String emailid;
 
 
     Timer timer = new Timer();
@@ -209,7 +209,7 @@ public class CreateworkflowFragment extends Fragment {
 
                 Retrofit retrofit = new Retrofit.Builder()
                         //has to have "http://" or it wont work
-                        .baseUrl("http://mpmp-env44.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                        .baseUrl("http://mpmp-env49.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -286,12 +286,54 @@ public class CreateworkflowFragment extends Fragment {
                             System.out.println("***********" + content);
                             emaillist.add(contactApi.getEmailaddress());
                             System.out.println("********email list = "+emaillist.toString());
+                            System.out.println("********email list size= "+String.valueOf(emaillist.size()));
                         }
 
                         //adapter.contact_list.add(new Contact(h,"Jan 06,2022 6:01PM","update1@bell.net","update1","here"));
                         //adapter.contact_list.add(new Contact(t,"Jan 06, 2022 6:09PM","update2@bell.net","update2","here"));
                         //adapter.notifyDataSetChanged();
 
+                        Retrofit retrofit2 = new Retrofit.Builder()
+                                //has to have "http://" or it wont work
+                                .baseUrl("http://mpmp-env49.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/")
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+                        JsonPlaceHolderApi jsonPlaceHolderApi2 = retrofit.create(JsonPlaceHolderApi.class);
+
+                        String getValue6 = getArguments().getString("name of rss");
+                        String getValue7 = getArguments().getString("subjectline");
+                        String emaillistcount = String.valueOf(emaillist.size());
+                        String thedateofficial = formatter.format(datecalender).toString();
+
+                        Call<Email> call9 = jsonPlaceHolderApi.getEmailApis(checkSigninApi.getPk(),getValue6, emaillistcount,thedateofficial,getValue7);
+                        call9.enqueue(new Callback<Email>() {
+                            @Override
+                            public void onResponse(Call<Email> call9, Response<Email> response) {
+                                if(!response.isSuccessful()){
+                                    try {
+                                        System.out.println("Code: " + response.code() +""+ response.errorBody().string());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return;
+                                }
+                                System.out.println("*");
+                                //its a list of whatever is inside
+                                Email emailApis = response.body();
+                                System.out.println("************"+response.body().toString());
+                                System.out.println("*****emailApis******"+emailApis);
+
+                                emailid = emailApis.getId().toString();
+
+
+
+                            }
+                            @Override
+                            public void onFailure(Call<Email> call9, Throwable t) {
+
+                                System.out.println("****onfailure****"+t.getMessage());
+                            }
+                        });
                     }
                     @Override
                     public void onFailure(Call<List<Contact>> call8, Throwable t) {
@@ -302,6 +344,14 @@ public class CreateworkflowFragment extends Fragment {
 
 
                 //above
+
+
+                //
+
+
+
+                //
+
 
 
 
@@ -735,7 +785,11 @@ public class CreateworkflowFragment extends Fragment {
 
                 //body.append("<img src=\"https://images.pexels.com/photos/1097456/pexels-photo-1097456.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1\" width=\"15%\" height=\"15%\" /><br>");
                 //body.append("End of message.");
-                body.append("</html>");
+
+                //body.append("</html>");
+                //body.append(" <img src=\'"+getValue12.toString()+"\' width=\'\"+\"15%\"+\"\\' height=\\'\"+\"15%\"+\"\\' /> </html>");
+                body.append(" <img src=\'"+"http://mpmp-env49.eba-ecp2ssmp.us-east-2.elasticbeanstalk.com/trackopenemails/"+emailid.toString()+"\' width=\'"+"1%"+"\' height=\'"+"1%"+"\' /> </html>");
+
                 System.out.println("body is:"+body.toString());
 
                 // inline images

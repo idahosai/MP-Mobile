@@ -35,6 +35,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".LoginemailsubscriberActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LoginemailsubscriberActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ForgetpasswordActivity"
             android:exported="true">
             <intent-filter>
@@ -51,7 +59,20 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".RegisteremailsubscriberActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.RegisteremailsubscriberActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".SubscriberMain"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true">
         </activity>
